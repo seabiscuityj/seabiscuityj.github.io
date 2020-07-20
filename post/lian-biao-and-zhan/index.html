@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>链表 &amp; 栈 | 我思故我在</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://seabiscuityj.github.io/favicon.ico?v=1595213618056">
+<link rel="stylesheet" href="https://seabiscuityj.github.io/styles/main.css">
+
+
+  
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="7 链表存在环（快慢指针）
+7.1 寻找重复数  Leetcode-287（Medium）
+287. 寻找重复数
+给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://seabiscuityj.github.io">
+        <img src="https://seabiscuityj.github.io/images/avatar.png?v=1595213618056" class="site-logo">
+        <h1 class="site-title">我思故我在</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/seabiscuityj" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://seabiscuityj.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">链表 &amp; 栈</h2>
+            <div class="post-date">2020-07-20</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="7-链表存在环快慢指针">7 链表存在环（快慢指针）</h1>
+<h2 id="71-寻找重复数-leetcode-287medium">7.1 寻找重复数  Leetcode-287（Medium）</h2>
+<p><a href="https://leetcode-cn.com/problems/find-the-duplicate-number/">287. 寻找重复数</a></p>
+<p>给定一个包含 <em>n</em> + 1 个整数的数组 <em>nums</em>，其数字都在 1 到 <em>n</em> 之间（包括 1 和 <em>n</em>），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: [1,3,4,2,2]
+输出: 2
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: [3,1,3,4,2]
+输出: 3
+</code></pre>
+<p><strong>说明：</strong></p>
+<ol>
+<li><strong>不能</strong>更改原数组（假设数组是只读的）。</li>
+<li>只能使用额外的 <em>O</em>(1) 的空间。</li>
+<li>时间复杂度小于 <em>O</em>(<em>n</em><sup>2</sup>&gt;) 。</li>
+<li>数组中只有一个重复的数字，但它可能不止重复出现一次。</li>
+</ol>
+<p><strong>方法1</strong>：利用HashSet判重，<strong>不符合要求2</strong></p>
+<pre><code class="language-java">/**
+时间复杂度：O(n)
+空间复杂度：O(n)
+*/
+
+class Solution {
+    public int findDuplicate(int[] nums) {
+        if(nums.length==0) return 0;
+        Set&lt;Integer&gt; visited = new HashSet&lt;&gt;();
+        for(int i:nums){
+            // HashSet的contains()方法是常数时间
+            if(visited.contains(i)) return i;
+            else visited.add(i);
+        }
+        return 0;
+    }
+}
+</code></pre>
+<p><strong>方法2</strong>：排序，<strong>不符合要求1</strong></p>
+<pre><code class="language-java">/**
+时间复杂度：O(nlogn)。它支配后续的线性扫描。
+空间复杂度：O(1) (or O(n))，在这里，我们对 nums 进行排序，因此内存大小是恒定的。如果我们不能修改输入数组，那么我们必须为 nums 的副本分配线性空间，并对其进行排序。
+*/
+class Solution {
+    public int findDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        for (int i = 1; i &lt; nums.length; i++) {
+            if (nums[i] == nums[i-1]) {
+                return nums[i];
+            }
+        }
+
+        return -1;
+    }
+}
+</code></pre>
+<p><strong>方法3</strong>：<code>二分查找</code></p>
+<p><a href="https://leetcode-cn.com/problems/find-the-duplicate-number/solution/er-fen-fa-si-lu-ji-dai-ma-python-by-liweiwei1419/">参考链接-by liweiwei</a></p>
+<p><strong>使用二分查找法定位在一个区间里的整数（结合抽屉原理）</strong></p>
+<p><code>抽屉原理</code>：</p>
+<p>桌上有十个苹果，要把这十个苹果放到九个抽屉里，无论怎样放，我们会发现至少会有一个抽屉里面放不少于两个苹果。</p>
+<p><strong>思路</strong>：这道题要求我们查找的数是一个整数，并且给出了这个整数的范围（在 1 和 n 之间，包括 <code>1</code> 和 <code>n</code>），并且给出了一些限制，于是可以使用二分查找法定位在一个区间里的整数。</p>
+<p>这个问题应用二分法与绝大多数其它问题应用二分法的不同点是：正着思考是容易的，即思考哪边区间存在重复数是容易的，因为依然是有抽屉原理做保证。我们依然通过一个具体的例子来分析应该如何编写代码。</p>
+<p>以 <code>[1, 2, 2, 3, 4, 5, 6, 7]</code> 为例，一共 <code>8</code> 个数，<code>n + 1 = 8</code>，<code>n = 7</code>，根据题目意思，每个数都在 <code>1</code> 和 <code>7</code> 之间。</p>
+<p>例如：区间 <code>[1, 7]</code> 的中位数是 <code>4</code>，遍历整个数组，统计小于等于 <code>4</code> 的整数的个数，至多应该为 <code>4</code> 个。换句话说，整个数组里小于等于 <code>4</code> 的整数的个数如果严格大于 <code>4</code> 个，就说明重复的数存在于区间 <code>[1, 4]</code>，它的反面是：重复的数存在于区间 <code>[5, 7]</code>。</p>
+<p>于是，二分法的思路是先猜一个数（有效范围 <code>[left, right]</code>里的中间数 <code>mid</code>），然后统计原始数组中<strong>小于等于</strong>这个中间数的元素的个数 <code>cnt</code>，如果 <code>cnt</code> <strong>严格大于</strong> <code>mid</code>，（注意我加了着重号的部分“小于等于”、“严格大于”）依然根据抽屉原理，重复元素就应该在区间 <code>[left, mid]</code> 里。</p>
+<p>说明：下面的算法运行时间肯定不会高，因为这个算法是空间敏感的，「用时间换空间」是反常规做法，大家了解一下即可。</p>
+<p>平常大家写算法，一般情况下都是「空间换时间」。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N \log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<pre><code class="language-java">/**
+时间复杂度：O(NlogN)，二分法的时间复杂度为 O(logN)，在二分法的内部，执行了一次 for 循环，时间复杂度为 O(N)，故时间复杂度为 O(NlogN)。
+空间复杂度：O(1)，使用了一个 cnt 变量，因此空间复杂度为 O(1)。
+*/
+
+
+public class Solution {
+
+    public int findDuplicate(int[] nums) {
+        int len = nums.length;
+        int left = 1;
+        int right = len - 1;
+        while (left &lt; right) {
+            // 在 Java 里可以这么用，当 left + right 溢出的时候，无符号右移保证结果依然正确
+            int mid = (left + right) &gt;&gt;&gt; 1;
+            
+            int res = 0;
+            for (int num : nums) {
+                if (num &lt;= mid) {
+                    res += 1;
+                }
+            }
+
+            // 根据抽屉原理，小于等于 4 的个数如果严格大于 4 个
+            // 此时重复元素一定出现在 [1, 4] 区间里
+
+            if (res &gt; mid) {
+                // 重复元素位于区间 [left, mid]
+                right = mid;
+            } else {
+                // if 分析正确了以后，else 搜索的区间就是 if 的反面
+                // [mid + 1, right]
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+}
+</code></pre>
+<h2 id="72-快乐数-leetcode-202">7.2 快乐数  Leetcode-202</h2>
+<p><a href="https://leetcode-cn.com/problems/happy-number/">202. 快乐数</a></p>
+<p>编写一个算法来判断一个数 <code>n</code> 是不是快乐数。</p>
+<p>「快乐数」定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是 <strong>无限循环</strong> 但始终变不到 1。如果 <strong>可以变为</strong> 1，那么这个数就是快乐数。</p>
+<p>如果 <code>n</code> 是快乐数就返回 <code>True</code> ；不是，则返回 <code>False</code> 。</p>
+<p><strong>示例：</strong></p>
+<pre><code>输入：19
+输出：true
+解释：
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+</code></pre>
+<p><strong>思路</strong></p>
+<p><a href="https://leetcode-cn.com/problems/happy-number/solution/kuai-le-shu-by-leetcode-solution/">来自参考链接</a></p>
+<p>我们可以先举几个例子。我们从 77 开始。则下一个数字是 4949（因为 7^2=4972=49），然后下一个数字是 9797（因为 4<sup>2+9</sup>2=9742+92=97）。我们可以不断重复该的过程，直到我们得到 11。因为我们得到了 11，我们知道 77 是一个快乐数，函数应该返回 <code>true</code>。</p>
+<img src="https://assets.leetcode-cn.com/solution-static/202/202_fig1.png" alt="fig1" style="zoom:50%;" />
+<p>再举一个例子，让我们从 116116 开始。通过反复通过平方和计算下一个数字，我们最终得到 5858，再继续计算之后，我们又回到 5858。由于我们回到了一个已经计算过的数字，可以知道有一个循环，因此不可能达到 11。所以对于 116116，函数应该返回 <code>false</code>。</p>
+<img src="https://assets.leetcode-cn.com/solution-static/202/202_fig2.png" alt="fig2" style="zoom: 50%;" />
+<p>根据我们的探索，我们猜测会有以下三种可能。</p>
+<ol>
+<li>最终会得到 1。</li>
+<li>最终会进入循环。</li>
+<li>值会越来越大，最后接近无穷大。</li>
+</ol>
+<p>第三个情况比较难以检测和处理。我们怎么知道它会继续变大，而不是最终得到1呢？我们可以仔细想一想，每一位数的最大数字的下一位数是多少。</p>
+<table>
+<thead>
+<tr>
+<th>Digits</th>
+<th style="text-align:center">Largest</th>
+<th style="text-align:right">Next</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:center">9</td>
+<td style="text-align:right">81</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:center">99</td>
+<td style="text-align:right">162</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:center">999</td>
+<td style="text-align:right">243</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:center">9999</td>
+<td style="text-align:right">324</td>
+</tr>
+<tr>
+<td>13</td>
+<td style="text-align:center">9999999999999</td>
+<td style="text-align:right">1053</td>
+</tr>
+</tbody>
+</table>
+<p>对于 <code>3</code> 位数的数字，它不可能大于 <code>243</code>。这意味着它要么被困在 <code>243</code> 以下的循环内，要么跌到 1。4位或 4位以上的数字在每一步都会丢失一位，直到降到 3位为止。所以我们知道，最坏的情况下，算法可能会在 243以下的所有数字上循环，然后回到它已经到过的一个循环或者回到 1。但它不会无限期地进行下去，所以我们排除第三种选择。</p>
+<p>即使在代码中你不需要处理第三种情况，你仍然需要理解为什么它永远不会发生，这样你就可以证明为什么你不处理它。</p>
+<p><strong>算法：</strong></p>
+<p>算法分为两部分，我们需要设计和编写代码。</p>
+<ol>
+<li>给一个数字 <code>n</code>，它的下一个数字是什么？</li>
+<li>按照一系列的数字来判断我们是否进入了一个循环。</li>
+</ol>
+<p>第 1 部分我们按照题目的要求做数位分离，求平方和。</p>
+<p>第 2 部分可以使用 HashSet 完成。每次生成链中的下一个数字时，我们都会检查它是否已经在 HashSet 中。</p>
+<ul>
+<li>如果它不在 HashSet 中，我们应该添加它。</li>
+<li>如果它在 HashSet 中，这意味着我们处于一个循环中，因此应该返回 <code>false</code>。</li>
+</ul>
+<p>我们使用 HashSet 而不是向量、列表或数组的原因是因为我们反复检查其中是否存在某数字。检查数字是否在哈希集中需要 <code>O(1)</code>的时间，而对于其他数据结构，则需要 <code>O(n)</code>的时间。选择正确的数据结构是解决这些问题的关键部分。</p>
+<p><strong>方法1：用快慢指针检测循环</strong></p>
+<pre><code class="language-java">public class Solution {
+    public int squareSum(int n) {
+        int sum = 0;
+        while(n &gt; 0){
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    public boolean isHappy(int n) {
+        // 快指针初始化为慢指针的下一步
+        int slow = n, fast = squareSum(n);
+        while (slow != fast){
+            // 慢指针一次走一步
+            slow = squareSum(slow);
+            // 快指针一次走两步
+            fast = squareSum(squareSum(fast));
+        };
+        // 跳出循环，可能是检测到环了
+        // 也可能是没有循环，但是已经快指针已经到头动不了，慢指针追上来了
+        // 此时就根据是否结果是否为1来判断是否是快乐数
+        return slow == 1;
+    }
+}
+</code></pre>
+<p><strong>方法2：用 HashSet 检测循环</strong>（比方法1慢点）</p>
+<pre><code class="language-java">class Solution {
+    public boolean isHappy(int n) {
+        // visited存放已经访问过的数
+        Set&lt;Integer&gt; visited = new HashSet&lt;&gt;();
+        visited.add(n);
+        int curr = helper(n);
+        while(curr!=1){
+            // 该数字已经被访问过，说明存在环，再下去就是死循环，直接return false表明不是快乐数
+            if(visited.contains(curr)) return false;
+            // 当前数没被访问过，则标记为访问过
+            visited.add(curr);
+            // 再次计算各位数字平方之和
+            curr = helper(curr);
+        }
+        return true;    
+    }
+
+    
+    // 辅助函数，求n的各位数字之和
+    public int helper(int n){
+        int res = 0;
+        while(n!=0){
+            res += (n%10)*(n%10);
+            n /= 10;
+        }
+        return res;
+    }
+}
+</code></pre>
+<h2 id="73-环形链表i-lc-141-smile">7.3 环形链表I  LC-141 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/linked-list-cycle/">141. 环形链表</a>   ✔️✔️</p>
+<p>给定一个链表，判断链表中是否有环。</p>
+<p>为了表示给定链表中的环，我们使用整数 <code>pos</code> 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 <code>pos</code> 是 <code>-1</code>，则在该链表中没有环。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+</code></pre>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png" alt="img" style="zoom:50%;" />
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+</code></pre>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png" alt="img" style="zoom: 67%;" />
+<p><strong>示例 3：</strong></p>
+<pre><code>输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。
+</code></pre>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png" alt="img" style="zoom: 67%;" />
+<p><strong>进阶：</strong></p>
+<p>你能用 <em>O(1)</em>（即，常量）内存解决此问题吗？</p>
+<p><strong>写法1</strong></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null) return false;
+        // 快慢指针均初始化为头结点
+        ListNode slow = head;
+        ListNode fast = head;
+        while(true){
+            if(fast==null || fast.next==null) return false;
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow==fast) return true;
+        }
+    }
+}
+</code></pre>
+<p><strong>写法2</strong></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null) return false;
+        ListNode slow = head;
+        // 快指针fast初始化为head.next，不要和slow相同。否则进入循环后就slow == fast了
+        ListNode fast = head.next;
+        // fast.next!=null是防止在else部分fast.next.next时出现空指针异常
+        // 一旦fast.next.next为空，也说明该链表不存在环，也是跳出循环返回false
+        while(slow!=null &amp;&amp; fast!=null &amp;&amp; fast.next!=null){
+            // 快慢指针相遇
+            if (slow == fast) return true;
+            // 没有相遇，慢指针接着走一步，快指针接着走两步
+            else{
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+<p><strong>写法3</strong></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head == null || head.next == null) return false;
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while(fast.next!=null &amp;&amp; slow!=fast){
+            slow = slow.next;
+            fast = fast.next.next;
+            // 要判断下，否则下次循环可能出现空指针异常
+            // 只要有指针走到空，说明没有环
+            if(fast == null) return false;
+        }
+        // 跳出循环的时候两种情况
+        if(fast.next==null) return false;
+        // 另一种情况就是slow == fast，说明有环
+        return true;
+    }
+}
+</code></pre>
+<p><strong>写法4</strong></p>
+<pre><code class="language-java">**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null) return false;
+        // 快指针fast初始化为head.next，不要和slow相同。否则进入循环后就slow == fast了
+        ListNode fast = head.next;
+        ListNode slow = head;
+        while(fast!=null &amp;&amp; fast.next!=null &amp;&amp; fast!=slow){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        if(fast==slow) return true;
+        else return false;
+    }
+}
+</code></pre>
+<h2 id="74-环形链表ii-lc-142-neutral_face">7.4 环形链表II  LC-142 😐</h2>
+<p><a href="https://leetcode-cn.com/problems/linked-list-cycle-ii/">142. 环形链表 II</a> ​  ✔️</p>
+<p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 <code>null</code>。</p>
+<p>为了表示给定链表中的环，我们使用整数 <code>pos</code> 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 <code>pos</code> 是 <code>-1</code>，则在该链表中没有环。</p>
+<p>**说明：**不允许修改给定的链表。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：head = [3,2,0,-4], pos = 1
+输出：tail connects to node index 1
+解释：链表中有一个环，其尾部连接到第二个节点。
+</code></pre>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png" alt="img" style="zoom:67%;" />
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：head = [1,2], pos = 0
+输出：tail connects to node index 0
+解释：链表中有一个环，其尾部连接到第一个节点。
+</code></pre>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png" alt="img" style="zoom:67%;" />
+<p><strong>示例 3：</strong></p>
+<pre><code>输入：head = [1], pos = -1
+输出：no cycle
+解释：链表中没有环。
+</code></pre>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png" alt="img" style="zoom:67%;" />
+<p><strong>进阶：</strong><br>
+你是否可以不用额外空间解决此题？</p>
+<p><a href="https://leetcode-cn.com/problems/linked-list-cycle-ii/solution/linked-list-cycle-ii-kuai-man-zhi-zhen-shuang-zhi-/">参考链接 by-Krahets</a></p>
+<p><strong>解题思路：</strong></p>
+<ul>
+<li>这类链表题目一般都是使用双指针法解决的，例如寻找距离尾部第K个节点、寻找环入口、寻找公共尾部入口等。</li>
+</ul>
+<p><strong>算法流程：</strong></p>
+<ol>
+<li>
+<p><strong>双指针第一次相遇：</strong> 设两指针 <code>fast</code>，<code>slow</code> 指向链表头部 <code>head</code>，<code>fast</code> 每轮走 2 步，<code>slow</code> 每轮走 1 步；</p>
+<ol>
+<li>
+<p><strong>第一种结果：</strong> <code>fast</code> 指针走过链表末端，说明链表无环，直接返回 <code>null</code>；</p>
+<ul>
+<li>TIPS: 若有环，两指针一定会相遇。因为每走 1 轮，<code>fast</code> 与 <code>slow</code> 的间距 +1，<code>fast</code> 终会追上 <code>slow</code>；</li>
+</ul>
+</li>
+<li>
+<p><strong>第二种结果：</strong> 当<code>fast == slow</code>时， 两指针在环中 <strong>第一次相遇</strong> 。下面分析此时<code>fast</code> 与 <code>slow</code>走过的 <strong>步数关系</strong> ：</p>
+<ul>
+<li>设链表共有 a+b 个节点，其中 <strong>链表头部到链表入口</strong> 有 a 个节点（不计链表入口节点）， <strong>链表环</strong> 有 b 个节点（这里需要注意，a 和 b 是未知数，例如图解上链表 a=4 , b=5）；设两指针分别走了 f，s 步，则有：</li>
+</ul>
+<ol>
+<li><code>fast</code> 走的步数是<code>slow</code>步数的 2 倍，即 f = 2s；（<strong>解析：</strong> <code>fast</code> 每轮走 2 步）</li>
+<li><code>fast</code> 比 <code>slow</code>多走了 n 个环的长度，即 f = s + nb；（ <strong>解析：</strong> 双指针都走过 a 步，然后在环内绕圈直到重合，重合时 <code>fast</code> 比 <code>slow</code> 多走 <strong>环的长度整数倍</strong> ）；</li>
+</ol>
+<ul>
+<li>以上两式相减得：f = 2nb，s = nb，即<code>fast</code>和<code>slow</code> 指针分别走了 2n，n 个 <strong>环的周长</strong> （注意： n 是未知数，不同链表的情况不同）。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>目前情况分析：</strong></p>
+<ul>
+<li>如果让指针从链表头部一直向前走并统计步数<code>k</code>，那么所有 <strong>走到链表入口节点时的步数</strong> 是：<code>k=a+nb</code>（先走 a 步到入口节点，之后每绕 1 圈环（ b 步）都会再次到入口节点）。</li>
+<li>而目前，<code>slow</code> 指针走过的步数为 nb 步。因此，我们只要想办法让 <code>slow</code> 再走 a 步停下来，就可以到环的入口。</li>
+<li>但是我们不知道 a 的值，该怎么办？依然是使用双指针法。我们构建一个指针，此指针需要有以下性质：此指针和<code>slow</code> 一起向前走 <code>a</code> 步后，两者在入口节点重合。那么从哪里走到入口节点需要 a 步？答案是链表头部<code>head</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>双指针第二次相遇：</strong></p>
+<ul>
+<li><code>slow</code>指针<strong>位置不变</strong>，将<code>fast</code>指针重新指向链表头部节点；<code>slow</code>和<code>fast</code>同时每轮向前走1步；
+<ul>
+<li>TIPS：此时 f = 0，s = nb ；</li>
+</ul>
+</li>
+<li>当 <code>fast</code> 指针走到f = a 步时，<code>slow</code> 指针走到步s = a+nb，此时 <strong>两指针重合，并同时指向链表环入口</strong> 。</li>
+</ul>
+</li>
+<li>
+<p><strong>返回<code>slow</code>指针指向的节点。</strong></p>
+</li>
+</ol>
+<p><strong>复杂度分析：</strong></p>
+<ul>
+<li><strong>时间复杂度</strong> O(N) ：第二次相遇中，慢指针须走步数 a &lt; a + b；第一次相遇中，慢指针须走步数a*+<em>b</em>−<em>x</em>&lt;<em>a</em>+*b，其中 x 为双指针重合点与环入口距离；因此总体为线性复杂度；</li>
+<li><strong>空间复杂度</strong> O(1) ：双指针使用常数大小的额外空间。</li>
+</ul>
+<pre><code class="language-java">public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        if(head == null || head.next == null) return null;
+        ListNode fast = head, slow = head;
+        //先判断是否有环
+        while (true) { 
+            if (fast == null || fast.next == null) return null;
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) break;
+        }
+        // 走到这一步，说明存在环
+        // fast指针重新指向head，此时slow指针还需走a步就能到环的入口
+        // 而head走a步也能到环的入口
+        fast = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        // 或者返回slow
+        return fast;
+    }
+}
+</code></pre>
+<p><font color=red>错误写法</font></p>
+<blockquote>
+<p>报错OutOfMemoryError。<font color=red>为什么？</font></p>
+</blockquote>
+<pre><code class="language-java">public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        if(head==null) return null;
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while(fast!=null &amp;&amp; fast.next!=null &amp;&amp; slow!=fast){
+        	slow = slow.next;
+            fast = fast.next.next;
+        }
+        if(fast==null || fast.next==null){
+        	return null;
+        }
+        fast = head;
+        while(fast!=slow){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
+</code></pre>
+<h1 id="链表-其余">链表-其余</h1>
+<h2 id="75-合并两个有序链表-lc-21-smile-star">7.5 合并两个有序链表  LC-21 😄 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/">21. 合并两个有序链表</a>   ✔️</p>
+<p>将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。</p>
+<p><strong>示例：</strong></p>
+<pre><code>输入：1-&gt;2-&gt;4, 1-&gt;3-&gt;4
+输出：1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4
+</code></pre>
+<p><strong>方法1</strong> ：<strong>迭代</strong>（有点<strong>双指针</strong>的意思）</p>
+<p>我们可以用迭代的方法来实现上述算法。当 l1 和 l2 都不是空链表时，判断 l1 和 l2 哪一个链表的头节点的值更小，将较小值的节点添加到结果里，当一个节点被添加到结果里之后，将对应链表中的节点向后移一位。</p>
+<p><strong>小技巧</strong>：定义一个<code>哑结点</code></p>
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li>
+<p>时间复杂度：O(n + m) ，其中 n 和 m 分别为两个链表的长度。因为每次循环迭代中，l1 和 l2 只有一个元素会被放进合并链表中， 因此 while 循环的次数不会超过两个链表的长度之和。所有其他操作的时间复杂度都是常数级别的，因此总的时间复杂度为 O(n+m)。</p>
+</li>
+<li>
+<p>空间复杂度：O(1) 。我们只需要常数的空间存放若干变量。</p>
+</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+
+
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // 定义一个哑结点dummy，赋什么值无所谓
+        ListNode dummy = new ListNode(-1);
+        // 定义一个遍历指针curr
+        ListNode curr = dummy;
+        
+        while(l1!=null &amp;&amp; l2!=null){
+            if(l1.val&lt;=l2.val){
+                curr.next = l1;
+                l1 = l1.next;
+            }else{
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            // 别忘了更新curr
+            curr = curr.next;
+        }
+        // 有一方链表已经遍历完，那么直接将另一方链表的剩余部分接上
+        if(l1==null){
+            curr.next = l2;
+        }else{
+            curr.next = l1;
+        }
+        // 返回哑结点的next，也就是所求
+        return dummy.next;
+    }
+}
+</code></pre>
+<p><strong>方法2</strong> ：<strong>递归</strong></p>
+<ul>
+<li>
+<p>时间复杂度：O(n + m)，其中 n 和 m 分别为两个链表的长度。因为每次调用递归都会去掉 l1 或者 l2 的头节点（直到至少有一个链表为空），函数 mergeTwoList 至多只会递归调用每个节点一次。因此，时间复杂度取决于合并后的链表长度，即 O(n+m)。</p>
+</li>
+<li>
+<p>空间复杂度：O(n + m)，其中 n 和 m 分别为两个链表的长度。递归调用 mergeTwoLists 函数时需要消耗栈空间，栈空间的大小取决于递归调用的深度。结束递归调用时 mergeTwoLists 函数最多调用 n+m 次，因此空间复杂度为 O(n+m)。</p>
+</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // 递归的边界条件
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+        
+        if (l1.val &lt; l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1, l2.next);
+            return l2;
+        }
+    }
+}
+</code></pre>
+<h2 id="76-合并k个排序链表-lc-23-persevere-star">7.6 合并K个排序链表  LC-23 😣 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/">23. 合并K个排序链表</a> ​  ✔️</p>
+<p>合并 <em>k</em> 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。</p>
+<p><strong>示例:</strong></p>
+<pre><code>输入:
+[
+  1-&gt;4-&gt;5,
+  1-&gt;3-&gt;4,
+  2-&gt;6
+]
+输出: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
+</code></pre>
+<p><strong>方法1</strong>：逐一合并两条链表</p>
+<p>最容易想到的思路：在题目 <code>7.5 合并两个有序链表</code> 的基础上逐一合并。</p>
+<p><strong>时间复杂度</strong>：O(NK)   (注：N是链表中结点总数)</p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode currNode = null;
+        int i = 0;
+        while(i&lt;lists.length){
+            currNode = mergeTwoLists(currNode,lists[i]);
+            i++;
+        }
+        return currNode;
+    }
+
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2){
+        ListNode head = new ListNode(-1);
+        ListNode curr = head;
+        while(l1!=null &amp;&amp; l2!=null){
+            if(l1.val&lt;=l2.val){
+                curr.next = l1;
+                l1 = l1.next;
+            }else{
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        if(l1==null) curr.next = l2;
+        else curr.next = l1;
+        return head.next;
+    }
+}
+</code></pre>
+<p><strong>方法2</strong>：在方法1的基础上优化，<strong>两两合并</strong>。</p>
+<hr>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi>K</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(NlogK)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="mclose">)</span></span></span></span></p>
+<p>K 条链表的总结点数是 N，平均每条链表有 N/K 个节点，因此合并两条链表的时间复杂度是 O(N/K)。从 K 条链表开始两两合并成 1 条链表，因此每条链表都会被合并 logK 次，因此 K 条链表会被合并 K * logK 次，因此总共的时间复杂度是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi>K</mi><mo>∗</mo><mi>N</mi><mi mathvariant="normal">/</mi><mi>K</mi></mrow><annotation encoding="application/x-tex">KlogK*N/K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span></span></span></span> 即 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi>K</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(NlogK)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="mclose">)</span></span></span></span>。</p>
+<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/4-chong-fang-fa-xiang-jie-bi-xu-miao-dong-by-sweet/">参考链接 by-sweetiee</a></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+
+        int len = lists.length;
+        if(len==0) return null;
+        while(len&gt;1){
+            int index = 0;
+            for(int i=0; i&lt;len; i+=2){
+                if(i==len-1){
+                    // 一开始我在这里index没有++，而是在最后len = index+1，导致死循环
+                    // 因为当要处理的链表是偶数时，这一步是到不了的。不能因为这里没有加1到最后跳出循环的时候加1
+                    // 跳出循环的index就是新的待排序链表的个数。
+                    lists[index++] = lists[i];
+                }else{
+                    lists[index++] = mergeTwoLists(lists[i],lists[i+1]);
+                }     
+            }
+            // 我一开始是在这里搞了个index+1,导致运行的时候死循环 
+            len = index;
+        }
+        return lists[0];
+    }
+
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2){
+        ListNode head = new ListNode(-1);
+        ListNode curr = head;
+        while(l1!=null &amp;&amp; l2!=null){
+            if(l1.val&lt;=l2.val){
+                curr.next = l1;
+                l1 = l1.next;
+            }else{
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        if(l1==null) curr.next = l2;
+        else curr.next = l1;
+        return head.next;
+    }
+}
+</code></pre>
+<h2 id="77-反转链表-lc-206-剑指-24-smile">7.7 反转链表  LC-206 ​剑指​ 2​4​ 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/reverse-linked-list/">206. 反转链表</a>   <font color=blue>联系7.8</font> <img src="https://img.shields.io/badge/leetcode25-K%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy">✔️</p>
+<p>反转一个单链表。</p>
+<p><strong>示例:</strong></p>
+<pre><code>输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL
+输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL
+</code></pre>
+<p><strong>进阶:</strong><br>
+你可以迭代或递归地反转链表。你能否用两种方法解决这道题？</p>
+<p><strong>方法1</strong>: <strong>迭代</strong>（迭代的意思应该就是一步步遍历走）</p>
+<hr>
+<p><strong>其实也用到了双指针</strong></p>
+<img src="https://pic.leetcode-cn.com/7d8712af4fbb870537607b1dd95d66c248eb178db4319919c32d9304ee85b602-%E8%BF%AD%E4%BB%A3.gif" alt="迭代.gif" style="zoom:67%;" />
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li>时间复杂度：O(n)，假设 n是列表的长度，时间复杂度是 O(n)。</li>
+<li>空间复杂度：O(1)。</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null || head.next==null) return head;
+        // 反转链表需要知道当前结点的前驱结点pre
+        // 其实也用到了双指针
+        ListNode pre = null;
+        ListNode curr = head;
+        while(curr!=null){
+            // 先保存当前结点的后驱结点，防止下一步curr.next操作后找不到后驱结点
+            ListNode tmp = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = tmp;
+        }
+        return pre;
+    }
+}
+</code></pre>
+<p><strong>方法2：递归</strong></p>
+<hr>
+<p><a href="https://leetcode-cn.com/problems/reverse-linked-list/solution/fan-zhuan-lian-biao-by-leetcode/">参考链接</a></p>
+<figure data-type="image" tabindex="1"><img src="C:%5CUsers%5CSean%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200501101713243.png" alt="image-20200501101713243" loading="lazy"></figure>
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li>时间复杂度：O(n)，假设 n 是列表的长度，那么时间复杂度为 O(n)。</li>
+<li>空间复杂度：O(n)，由于使用递归，将会使用隐式栈空间。递归深度可能会达到 n 层。</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+ class Solution{
+     public ListNode reverseList(ListNode head) {
+        // 递归的边界条件。容易漏写head.next==null，导致16行出现“空指针异常”
+        if (head == null || head.next == null) return head;
+        ListNode res = reverseList(head.next);
+        // 这个res其实就是整个链表反转后的头结点
+        // 此时只需要将head.next的结点的next由null改为指向head，即将head结点加到反转链表的末尾
+        head.next.next = head;
+        // 将head变为尾结点
+        head.next = null;
+        return res;
+    }
+ }
+</code></pre>
+<h2 id="78-k个一组反转链表-lc-25-persevere-star">7.8 K个一组反转链表  LC-25 😣 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/reverse-nodes-in-k-group/">25. K 个一组翻转链表</a>   <font color=blue>联系7.7</font> <img src="https://img.shields.io/badge/leetcode206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy">✔️</p>
+<p>给你一个链表，每 <em>k</em> 个节点一组进行翻转，请你返回翻转后的链表。</p>
+<p><em>k</em> 是一个正整数，它的值小于或等于链表的长度。</p>
+<p>如果节点总数不是 <em>k</em> 的整数倍，那么请将最后剩余的节点保持原有顺序。</p>
+<p><strong>示例：</strong></p>
+<p>给你这个链表：<code>1-&gt;2-&gt;3-&gt;4-&gt;5</code></p>
+<p>当 <em>k</em> = 2 时，应当返回: <code>2-&gt;1-&gt;4-&gt;3-&gt;5</code></p>
+<p>当 <em>k</em> = 3 时，应当返回: <code>3-&gt;2-&gt;1-&gt;4-&gt;5</code></p>
+<p><strong>说明：</strong></p>
+<ul>
+<li>你的算法只能使用常数的额外空间。</li>
+<li><strong>你不能只是单纯的改变节点内部的值</strong>，而是需要实际进行节点交换。</li>
+</ul>
+<p><strong>方法：模拟（按部就班）</strong></p>
+<hr>
+<ul>
+<li>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O( N )</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span> 其中 N 为链表的长度。head 指针会在 $O(\lfloor \frac{n}{k} \rfloor)</p>
+<p>$个结点上停留，每次停留需要进行一次 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>k</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span> 的翻转操作。</p>
+</li>
+<li>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O( 1 )</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> 只需要建立常数个变量</p>
+</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int length = 0;
+        ListNode cur = head;
+        // 计算链表的长度length
+        while(cur!=null){
+            length++;
+            cur = cur.next;
+        }
+        // nextHead表示下一个要执行翻转的链表段的头部
+        ListNode nexthead = head;
+        // curTail表示当前执行完部分翻转后的链表尾
+        ListNode curTail = null;
+        // finalHead表示最后整个链表的头
+        ListNode finalHead = null;
+        // i+k&gt;length的话，索引i处结点开始的链表段就不需要翻转了
+        for(int i=0; i+k&lt;=length; i+=k){
+            ListNode[] temp = partReverse(nexthead,k);
+            // 第一段翻转后特殊对待，因为要给finalHead赋值，后续不会再更改
+            // 此外，还要更新curTail和更新nextHead
+            if(i==0){
+                finalHead = temp[0];
+                curTail = temp[1];
+                nexthead = temp[2];
+                continue;
+            }
+            nexthead = temp[2];
+            // 注意！按题目意思，curTail下一个结点应该是下一段链表翻转后的头结点temp[0]
+            curTail.next = temp[0];
+            // 更新curTail
+            curTail = temp[1];
+        }
+        // 这段设置的目的是考虑到剩下的因为长度&lt;K而没有执行翻转的链表段
+        curTail.next = nexthead;
+        return finalHead;
+    }
+
+    // 对head开始的，长度为length的链表段执行翻转
+    // 返回值ListNode[]，包含3个结点
+    // ListNode[0]为翻转后的头
+    // ListNode[1]为翻转后的尾
+    // ListNode[2]为下一个待翻转的链表段的头，有必要，不能用ListNode[0].next代替，因为连接已打断
+    public ListNode[] partReverse(ListNode head, int length){
+        ListNode pre  = null;
+        ListNode curr = head;
+        int i = 0;
+        while(i&lt;length &amp;&amp; curr!=null){
+            ListNode tmp = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = tmp;
+            i++;
+        }
+        ListNode[] res = new ListNode[3];
+        // 分段链表的头
+        res[0] = pre;
+        // 分段链表的尾
+        res[1] = head;
+        // 下一段链表的头
+        res[2] = curr;
+        return res;
+    }
+}
+</code></pre>
+<h2 id="79-排序链表-lc-148-persevere-star">7.9 排序链表 LC-148 😣 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/sort-list/">148. 排序链表</a></p>
+<p>在 <em>O</em>(<em>n</em> log <em>n</em>) 时间复杂度和常数级空间复杂度下，对链表进行排序。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: 4-&gt;2-&gt;1-&gt;3
+输出: 1-&gt;2-&gt;3-&gt;4
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: -1-&gt;5-&gt;3-&gt;4-&gt;0
+输出: -1-&gt;0-&gt;3-&gt;4-&gt;5
+</code></pre>
+<p><strong>方法1：递归归并排序</strong></p>
+<hr>
+<h2 id="710-两数相加-lc-2-neutral_face-star">7.10 两数相加  LC-2 😐 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/add-two-numbers/">2. 两数相加</a>   <font color=blue>联系7.11</font>  <img src="https://img.shields.io/badge/leetcode445-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0II-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy"> ✔️</p>
+<p>给出两个 <strong>非空</strong> 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 <strong>逆序</strong> 的方式存储的，并且它们的每个节点只能存储 <strong>一位</strong> 数字。</p>
+<p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p>
+<p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p>
+<p><strong>示例：</strong></p>
+<pre><code>输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
+输出：7 -&gt; 0 -&gt; 8
+原因：342 + 465 = 807
+</code></pre>
+<p><strong>思路</strong></p>
+<p>典型的两个数<strong>按位相加</strong>，<strong>循环更新进位</strong></p>
+<p><strong>本来以为</strong>是将和按照从高位到低位插入链表，那样的话需要借助一个栈将和的各位压入栈（从低位到高位入栈）</p>
+<p>输出结果链表的时候，依次出栈（根据“后入先出”），保证高位在链表前面，低位在后面。</p>
+<p><strong>但是题目要求</strong>的是和从低位到高位插入链表，就不需要借助栈了。</p>
+<p><strong>小技巧</strong>：输出结果列表的时候借助<code>哑结点dummy</code></p>
+<p><code>时间复杂度</code>：O*(max(<em>m</em>,<em>n</em>))，假设 m 和 n分别表示 l1 和 l2* 的长度</p>
+<p><code>空间复杂度</code>：<em>O</em>(max(<em>m</em>,<em>n</em>))， 新列表的长度最多为 max(m,n) + 1。</p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        //Stack&lt;Integer&gt; s = new Stack&lt;&gt;();
+        //Stack&lt;Integer&gt; s2 = new Stack&lt;&gt;();
+        
+        // 哑结点的妙用
+        ListNode dummy = new ListNode(-1);
+        // 这一步我容易写错。写成curNode = null, dummy.next = cur
+        ListNode currNode = dummy;
+        // bit表示进位
+        int bit = 0;
+        // curr表示两位相加进位后当前位的结果
+        int curr = 0;
+        while(l1!=null &amp;&amp; l2!=null){
+            curr = (l1.val + l2.val + bit)%10;
+            //s.push(curr);
+            currNode.next = new ListNode(curr);
+            currNode = currNode.next;
+            bit = (l1.val + l2.val + bit)/10;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        // 注意下面是两个while循环，只能进入其中之一。遍历链表的时候肯定是while(node!=null)的形式
+        while(l2!=null){
+            curr = (l2.val + bit)%10;
+            currNode.next = new ListNode(curr);
+            currNode = currNode.next;
+            //s.push(curr);
+            bit = (l2.val + bit)/10;
+            l2 = l2.next;
+        }
+        while(l1!=null){
+            curr = (l1.val + bit)%10;
+            currNode.next = new ListNode(curr);
+            currNode = currNode.next;
+            //s.push(curr);
+            bit = (l1.val + bit)/10;
+            l1 = l1.next;
+        }
+        // 这个判断容易漏掉。比如这种情况[5]和[5],十位上的进位1被忽略了。
+        if(bit!=0){
+            currNode.next = new ListNode(bit);
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<p><font color=red>联系7.11 LC-445 改进写法如下,体现在大的while循环减少到1个 </font></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        
+        // 哑结点的妙用
+        ListNode dummy = new ListNode(-1);
+        // 这一步我容易写错。写成curNode = null, dummy.next = cur
+        ListNode currNode = dummy;
+        // carry表示进位
+        int carry = 0;
+        // curr表示两位相加进位后当前位的结果
+        int curr = 0;
+        // 同时判断三个条件，将carry!=0放在或运算的最后（防止carry初始化0导致进不了循环）
+        // 从逻辑上讲，也是在两个链表都为空的时候才需要判断进位是否为0
+        while(l1!=null || l2!=null || carry!=0){
+            int num1 = (l1==null)? 0:l1.val;
+            int num2 = (l2==null)? 0:l2.val;
+            curr = (num1+num2+carry)%10;
+            currNode.next = new ListNode(curr);
+            currNode = currNode.next;
+            carry = (num1+num2+bit)/10;
+            // 这下面的两个if判断不能丢。
+            // 注意！！因为循环内会出现两个链表都遍历完到null，但是进位不为0。不加判断直接l1=l1.next会出现空指针异常
+            if(l1!=null){
+                l1 = l1.next;
+            }
+            if(l2!=null){
+                l2 = l2.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<h2 id="711-两数相加ii-lc-445-neutral_face-star">7.11 两数相加II LC-445 😐 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/add-two-numbers-ii/">445. 两数相加 II</a></p>
+<p>给你两个 <strong>非空</strong> 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。</p>
+<p>你可以假设除了数字 0 之外，这两个数字都不会以零开头。</p>
+<p><strong>进阶：</strong></p>
+<p>如果输入链表不能修改该如何处理？换句话说，你不能对列表中的节点进行翻转。</p>
+<p><strong>示例：</strong></p>
+<pre><code>输入：(7 -&gt; 2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
+输出：7 -&gt; 8 -&gt; 0 -&gt; 7
+</code></pre>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    private Stack&lt;Integer&gt; stack1;
+    private Stack&lt;Integer&gt; stack2;
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        stack1 = new Stack&lt;&gt;();
+        stack2 = new Stack&lt;&gt;();
+        buildStack(l1,stack1);
+        buildStack(l2,stack2);
+        int curBit = 0;
+        int carry = 0;
+        //ListNode dummy = new ListNode(0);
+        //ListNode pre = dummy;
+        ListNode pre = null;
+        ListNode cur = null;
+        while(!stack1.isEmpty() &amp;&amp; !stack2.isEmpty()){
+            int num1 = stack1.pop();
+            int num2 = stack2.pop();
+            curBit = (num1+num2+carry)%10;
+            carry = (num1+num2+carry)/10;
+            cur = new ListNode(curBit);
+            cur.next = pre;
+            pre = cur;
+        }
+
+        while(!stack1.isEmpty()){
+            int num1 = stack1.pop();
+            curBit = (num1+carry)%10;
+            carry = (num1+carry)/10;
+            cur = new ListNode(curBit);
+            cur.next = pre;
+            pre = cur;
+        }
+
+        while(!stack2.isEmpty()){
+            int num2 = stack2.pop();
+            curBit = (num2+carry)%10;
+            carry = (num2+carry)/10;
+            cur = new ListNode(curBit);
+            cur.next = pre;
+            pre = cur;
+        }
+
+        if(carry!=0){
+            cur = new ListNode(carry);
+            cur.next = pre;
+            pre = cur;
+        }
+        return pre;   
+    }
+    public void buildStack(ListNode node,Stack&lt;Integer&gt; stack){
+        while(node!=null){
+            stack.push(node.val);
+            node = node.next;
+        }
+    }   
+}
+</code></pre>
+<p><font color=red>减少代码行数的写法如下</font></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack&lt;Integer&gt; l1stack = buildStack(l1);
+        Stack&lt;Integer&gt; l2stack = buildStack(l2);
+        // 哑结点
+        ListNode dummy = new ListNode(-1);
+        // carry表示进位
+        int carry = 0;
+        while (!l1stack.isEmpty() || !l2stack.isEmpty() || carry!=0){
+            int x = l1stack.isEmpty()? 0:l1stack.pop();
+            int y = l2stack.isEmpty()? 0:l2stack.pop();
+            int sum = x + y + carry;
+            carry = (x + y + carry)/10;
+            ListNode node = new ListNode(sum%10);
+            // 头插法，从低位相加向高位相加走，新的结点插入哑结点的下一个位置
+            // 从而实现相加结果头结点是最高位
+            node.next = dummy.next;
+            dummy.next = node;
+        }
+
+        return head.next;
+    }
+
+    private Stack&lt;Integer&gt; buildStack(ListNode l){
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        while (l!=null){
+            stack.push(l.val);
+            l = l.next;
+        }
+        return stack;
+    }
+}
+</code></pre>
+<h2 id="712-链表的中间节点-lc-876-smile">7.12 链表的中间节点  LC-876 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/middle-of-the-linked-list/">876. 链表的中间结点</a>   ✔️</p>
+<p>给定一个带有头结点 <code>head</code> 的非空单链表，返回链表的中间结点。</p>
+<p>如果有两个中间结点，则返回第二个中间结点。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：[1,2,3,4,5]
+输出：此列表中的结点 3 (序列化形式：[3,4,5])
+返回的结点值为 3 。 (测评系统对该结点序列化表述是 [3,4,5])。
+注意，我们返回了一个 ListNode 类型的对象 ans，这样：
+ans.val = 3, ans.next.val = 4, ans.next.next.val = 5, 以及 ans.next.next.next = NULL.
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：[1,2,3,4,5,6]
+输出：此列表中的结点 4 (序列化形式：[4,5,6])
+由于该列表有两个中间结点，值分别为 3 和 4，我们返回第二个结点。
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li>给定链表的结点数介于 <code>1</code> 和 <code>100</code> 之间。</li>
+</ul>
+<p><strong>方法1：快慢指针</strong></p>
+<hr>
+<p>时间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O( N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<p>空间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></p>
+<p><strong>写法1（推荐）</strong></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        // 快慢指针都指向头结点
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast!=null &amp;&amp; fast.next!=null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // 一旦跳出循环。
+        // 如果fast==null，则链表长度为偶数。slow指向中间两个结点的居右一个结点
+        // 如果fast不为null，而fast.next==null，则链表长度为奇数，slow指向中间结点
+        // 无论是上面两个情形中的哪一种，按题目要求都是返回slow
+        return slow;
+    }
+}
+</code></pre>
+<p>写法2：fast指针指向头结点下一个结点</p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        // 慢指针指向头结点
+        ListNode slow = head;
+        // 快指针初始化为指向头结点下一个结点
+        ListNode fast = head.next;
+        // 
+        while(fast!=null &amp;&amp; fast.next!=null){
+            // 慢指针一次走一步，快指针一次走两步
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // 如果跳出循环时，fast为null，此时链表长度为奇数，slow指向中间结点
+        if(fast == null) return slow;
+        // 跳出循环时，fast不为null但fast.next为null，此时链表长度为偶数，slow指向左边结点
+        else return slow.next;
+    }
+}
+</code></pre>
+<h2 id="713-移除链表元素-lc-203-smile">7.13 移除链表元素  LC-203 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/remove-linked-list-elements/">203. 移除链表元素</a>   ✔️</p>
+<p>删除链表中等于给定值 <strong>val</strong> 的所有节点。</p>
+<p><strong>示例:</strong></p>
+<pre><code>输入: 1-&gt;2-&gt;6-&gt;3-&gt;4-&gt;5-&gt;6, val = 6
+输出: 1-&gt;2-&gt;3-&gt;4-&gt;5
+</code></pre>
+<p><strong>方法1：哑结点</strong></p>
+<hr>
+<p>时间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<p>空间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode pre = dummy;
+        while(head!=null){
+            if(head.val==val){
+                ListNode tmp = head.next;
+                pre.next = tmp;
+                //head.next = null;
+                // 不更新pre，只更新head
+                head = tmp;
+            }else{
+                pre = head;
+            	head = head.next;
+            }   
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<p><strong>方法2：递归</strong></p>
+<hr>
+<p>时间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<p>空间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O( N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if(head == null){
+            return null;
+        }
+        if(head.val == val){
+            return removeElements(head.next, val);
+        }else{
+            head.next = removeElements(head.next, val);
+            return head;
+        }
+    }
+}
+</code></pre>
+<h2 id="714-删除链表的倒数第n个结点-lc-19-neutral_face">7.14 删除链表的倒数第N个结点 LC-19 😐</h2>
+<p><a href="https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/">19. 删除链表的倒数第N个节点</a>  ✔️</p>
+<p><font color=blue>联系 7.25</font>   <img src="https://img.shields.io/badge/%E5%89%91%E6%8C%8722-%E9%93%BE%E8%A1%A8%E5%80%92%E6%95%B0%E7%AC%ACK%E4%B8%AA%E7%BB%93%E7%82%B9-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy"> <font color=red> 一样的思路，快慢指针，维护一个长度为N的区间</font></p>
+<p>给定一个链表，删除链表的倒数第 <em>n</em> 个节点，并且返回链表的头结点。</p>
+<p><strong>示例：</strong></p>
+<pre><code>给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 n = 2.
+
+当删除了倒数第二个节点后，链表变为 1-&gt;2-&gt;3-&gt;5.
+</code></pre>
+<p><strong>说明：</strong></p>
+<p>给定的 <em>n</em> 保证是有效的。</p>
+<p><strong>进阶：</strong></p>
+<p>你能尝试使用一趟扫描实现吗？</p>
+<p>遍历两次，第一次求出链表长度，第二次遍历删除结点的解法就不说了。</p>
+<p><strong>解法：双指针</strong></p>
+<hr>
+<p>时间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<p>空间复杂度：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<p><font color=blue>这里是一次遍历删除倒数第N个结点的巧解</font></p>
+<p><font color=red>关键在于维护一个长度为n-1的链表段，双指针一头一尾同时向后走，等其中的厚后指针到了链表尾部，也就找到了倒数第N个结点</font></p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fast = head;
+        // 先将一个指针从头向后走n步
+        // 题干说了n确保是有效的，即1&lt;=n&lt;=链表的长度
+        while (n-- &gt; 0) {
+            fast = fast.next;
+        }
+        // 如果此时该指针为null，说明n正好是链表的长度，即删除头结点，则返回head.next;
+        if (fast == null) return head.next;
+        // 此时fast指针不为null，说明n&lt;链表长度，当前fast指针还指向链表的某个结点
+        // 定义一个指针slow指向头结点
+        // 此时slow指针和fast指针之间有n-1个结点
+        ListNode slow = head;
+        // fast指针一直向后走直到链表末尾
+        // slow指针同步向后走一步
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        // 当fast指针走到链表末尾的时候，因为slow指针和fast指针之间n-1个结点
+        // 所以链表的倒数第n个结点就是slow的后继结点
+        // 将其删除后，就需要改变指针走向,即slow.next = slow.next.next;
+        slow.next = slow.next.next;
+        // 只要不是删除头结点，就返回头结点
+        return head;
+    }
+}
+</code></pre>
+<h2 id="715-删除链表中的结点-lc-237-smile">7.15 删除链表中的结点  LC-237 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/delete-node-in-a-linked-list/">237. 删除链表中的节点</a>   ✔️</p>
+<p>请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点，你将只被给定要求被删除的节点。</p>
+<p>现有一个链表 -- head = [4,5,1,9]，它可以表示为:</p>
+<figure data-type="image" tabindex="2"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/01/19/237_example.png" alt="img" loading="lazy"></figure>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: head = [4,5,1,9], node = 5
+输出: [4,1,9]
+解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 1 -&gt; 9.
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: head = [4,5,1,9], node = 1
+输出: [4,5,9]
+解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 5 -&gt; 9.
+</code></pre>
+<p><strong>说明:</strong></p>
+<ul>
+<li>链表至少包含两个节点。</li>
+<li>链表中所有节点的值都是唯一的。</li>
+<li>给定的节点为非末尾节点并且一定是链表中的一个有效节点。</li>
+<li>不要从你的函数中返回任何结果。</li>
+</ul>
+<p><strong>思路</strong></p>
+<p>这题解法清奇，我也是没看懂题目，怎么只有一个参数。看了评论果然一片吐槽，最后才明白了</p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    // node表示的是要删除的结点
+    public void deleteNode(ListNode node) {
+        // 因为无法访问前一个结点，所以可以把要删除的结点的后一个结点的值前移
+        node.val = node.next.val;
+        // 然后删除掉后一个结点
+        node.next = node.next.next;
+    }
+}
+</code></pre>
+<h2 id="716-lru缓存机制-lc-146-persevere-star">7.16 LRU缓存机制  LC-146 😣 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/lru-cache/">146. LRU缓存机制</a></p>
+<p>运用你所掌握的数据结构，设计和实现一个 <a href="https://baike.baidu.com/item/LRU">LRU (最近最少使用) 缓存机制</a>。它应该支持以下操作： 获取数据 <code>get</code> 和 写入数据 <code>put</code> 。</p>
+<p>获取数据 <code>get(key)</code> - 如果密钥 (key) 存在于缓存中，则获取密钥的值（总是正数），否则返回 -1。<br>
+写入数据 <code>put(key, value)</code> - 如果密钥已经存在，则变更其数据值；如果密钥不存在，则插入该组「密钥/数据值」。当缓存容量达到上限时，它应该在写入新数据之前删除最久未使用的数据值，从而为新的数据值留出空间。</p>
+<p><strong>进阶:</strong></p>
+<p>你是否可以在 <strong>O(1)</strong> 时间复杂度内完成这两种操作？</p>
+<p><strong>示例:</strong></p>
+<pre><code>LRUCache cache = new LRUCache( 2 /* 缓存容量 */ );
+
+cache.put(1, 1);
+cache.put(2, 2);
+cache.get(1);       // 返回  1
+cache.put(3, 3);    // 该操作会使得密钥 2 作废
+cache.get(2);       // 返回 -1 (未找到)
+cache.put(4, 4);    // 该操作会使得密钥 1 作废
+cache.get(1);       // 返回 -1 (未找到)
+cache.get(3);       // 返回  3
+cache.get(4);       // 返回  4
+</code></pre>
+<p><strong>方法：哈希表 + 双向链表</strong></p>
+<hr>
+<p>实现本题的两种操作，需要用到一个哈希表和一个双向链表。在面试中，面试官一般会期望读者能够自己实现一个简单的双向链表，而不是使用语言自带的、封装好的数据结构。在 Java 语言中，同样有类似的数据结构 LinkedHashMap。这些做法都不会符合面试官的要求，因此下面只给出使用封装好的数据结构实现的代码，而不多做任何阐述。</p>
+<p><strong>算法</strong></p>
+<p>LRU 缓存机制可以通过哈希表辅以双向链表实现，我们用一个哈希表和一个双向链表维护所有在缓存中的键值对。</p>
+<ul>
+<li>
+<p>双向链表按照被使用的顺序存储了这些键值对，靠近头部的键值对是最近使用的，而靠近尾部的键值对是最久未使用的。</p>
+</li>
+<li>
+<p>哈希表即为普通的哈希映射（HashMap），通过缓存数据的键映射到其在双向链表中的位置。</p>
+</li>
+</ul>
+<p>这样以来，我们首先使用哈希表进行定位，找出缓存项在双向链表中的位置，随后将其移动到双向链表的头部，即可在 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> 的时间内完成 <code>get</code> 或者 <code>put</code> 操作。具体的方法如下：</p>
+<p>对于 <code>get</code> 操作，首先判断 <code>key</code> 是否存在：</p>
+<p>如果 <code>key</code> 不存在，则返回 −1；</p>
+<p>如果 <code>key</code> 存在，则 <code>key</code> 对应的节点是最近被使用的节点。通过哈希表定位到该节点在双向链表中的位置，并将其移动到双向链表的头部，最后返回该节点的值。</p>
+<p>对于 <code>put</code> 操作，首先判断 <code>key</code> 是否存在：</p>
+<p>如果 <code>key</code> 不存在，使用 <code>key</code> 和 <code>value</code> 创建一个新的节点，在双向链表的头部添加该节点，并将 <code>key</code> 和该节点添加进哈希表中。然后判断双向链表的节点数是否超出容量，如果超出容量，则删除双向链表的尾部节点，并删除哈希表中对应的项；</p>
+<p>如果 <code>key</code> 存在，则与 <code>get</code> 操作类似，先通过哈希表定位，再将对应的节点的值更新为 <code>value</code>，并将该节点移到双向链表的头部。</p>
+<p>上述各项操作中，访问哈希表的时间复杂度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>，在双向链表的头部添加节点、在双向链表的尾部删除节点的复杂度也为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。而将一个节点移到双向链表的头部，可以分成「删除该节点」和「在双向链表的头部添加节点」两步操作，都可以在 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> 时间内完成。</p>
+<p><strong>小贴士</strong></p>
+<p>在双向链表的实现中，使用一个<strong>伪头部</strong>（<code>dummy head</code>）和<strong>伪尾部</strong>（<code>dummy tail</code>）标记界限，这样在添加节点和删除节点的时候就不需要检查相邻的节点是否存在。</p>
+<p><strong>时间复杂度</strong>：对于 <code>put</code> 和 <code>get</code> 都是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。</p>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mtext>capacity</mtext><mo>)</mo></mrow><annotation encoding="application/x-tex">O(\text{capacity})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord text"><span class="mord">capacity</span></span><span class="mclose">)</span></span></span></span>，因为哈希表和双向链表最多存储 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtext>capacity</mtext><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\text{capacity} + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8623000000000001em;vertical-align:-0.19444em;"></span><span class="mord text"><span class="mord">capacity</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 个元素。</p>
+<pre><code class="language-java">public class LRUCache {
+    class Node {
+        // 结点里也存放key和value，但不必是Entry&lt;K,V&gt;形式
+        // 存放key的必要性在于要删除最近最少被访问的结点时，必须知道结点的key，这样才能从map中根据该key删除对应项
+        int key;
+        int value;
+        Node prev;
+        Node next;
+        // 默认无惨构造，方法体内什么都没有
+        public Node() {}
+        public Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private Map&lt;Integer, Node&gt; cache = new HashMap&lt;Integer, Node&gt;();
+    private int size;
+    private int capacity;
+    private Node dummyhead, dummytail;
+
+    public LRUCache(int capacity) {
+        this.size = 0;
+        this.capacity = capacity;
+        // 调用Node的无惨构造方法，创建伪头结点和伪尾部结点
+        dummyhead = new Node();
+        dummytail = new Node();
+        dummyhead.next = dummytail;
+        dummytail.prev = dummyhead;
+        // dummyhead.prev和dummytail.next未设置，默认为null
+    }
+
+    public int get(int key) {
+        Node node = cache.get(key);
+        if (node == null) {
+            return -1;
+        }
+        // 如果 key 存在，先通过哈希表定位，再移到头部
+        moveToHead(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        Node node = cache.get(key);
+        if (node == null) {
+            // 如果 key 不存在，创建一个新的节点
+            Node newNode = new Node(key, value);
+            // 添加进哈希表
+            cache.put(key, newNode);
+            // 添加至双向链表的头部
+            addToHead(newNode);
+            // 别忘了维护size
+            ++size;
+            // 先将新结点插入头部，再判断是否超出容量
+            if (size &gt; capacity) {
+                // 如果超出容量，删除双向链表的尾部节点
+                Node tail = removeTail();
+                // 别忘了删除哈希表中对应的项
+                cache.remove(tail.key);
+                // 维护size
+                --size;
+            }
+        }
+        else {
+            // 如果 key 存在，先通过哈希表定位，再修改 value，并移到头部
+            node.value = value;
+            moveToHead(node);
+        }
+    }
+
+    // 将新加入的结点添加到双向链表头部
+    private void addToHead(Node node) {
+        node.prev = dummyhead;
+        node.next = dummyhead.next;
+        dummyhead.next.prev = node;
+        dummyhead.next = node;
+    }
+
+    private void removeNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    // 将最近访问的结点移动到双向链表头部
+    // 分两步，先删除该结点
+    // 再将该结点添加到双向链表头部
+    private void moveToHead(Node node) {
+        removeNode(node);
+        addToHead(node);
+    }
+
+    // 删除双向链表尾部结点
+    private Node removeTail() {
+        Node res = dummytail.prev;
+        removeNode(res);
+        return res;
+    }
+}
+</code></pre>
+<h2 id="717-两个链表的第一个公共结点-lc-160-剑指-52-smile">7.17 两个链表的第一个公共结点  LC-160 剑指 52 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/">剑指 Offer 52. 两个链表的第一个公共节点</a>   ✔️</p>
+<p>输入两个链表，找出它们的第一个公共节点。</p>
+<p>如下面的两个链表**：**</p>
+<p><a href="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png" alt="img" style="zoom:67%;" /></a></p>
+<p>在节点 c1 开始相交。</p>
+<p><strong>示例 1：</strong></p>
+<p><a href="https://assets.leetcode.com/uploads/2018/12/13/160_example_1.png"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_example_1.png" alt="img" style="zoom:67%;" /></a></p>
+<pre><code>输入：intersectVal = 8, listA = [4,1,8,4,5], listB = [5,0,1,8,4,5], skipA = 2, skipB = 3
+输出：Reference of the node with value = 8
+输入解释：相交节点的值为 8 （注意，如果两个列表相交则不能为 0）。从各自的表头开始算起，链表 A 为 [4,1,8,4,5]，链表 B 为 [5,0,1,8,4,5]。在 A 中，相交节点前有 2 个节点；在 B 中，相交节点前有 3 个节点。
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<p><a href="https://assets.leetcode.com/uploads/2018/12/13/160_example_2.png"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_example_2.png" alt="img" style="zoom:67%;" /></a></p>
+<pre><code>输入：intersectVal = 2, listA = [0,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1
+输出：Reference of the node with value = 2
+输入解释：相交节点的值为 2 （注意，如果两个列表相交则不能为 0）。从各自的表头开始算起，链表 A 为 [0,9,1,2,4]，链表 B 为 [3,2,4]。在 A 中，相交节点前有 3 个节点；在 B 中，相交节点前有 1 个节点。
+</code></pre>
+<p><strong>示例 3：</strong></p>
+<p><a href="https://assets.leetcode.com/uploads/2018/12/13/160_example_3.png"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_example_3.png" alt="img" style="zoom:67%;" /></a></p>
+<pre><code>输入：intersectVal = 0, listA = [2,6,4], listB = [1,5], skipA = 3, skipB = 2
+输出：null
+输入解释：从各自的表头开始算起，链表 A 为 [2,6,4]，链表 B 为 [1,5]。由于这两个链表不相交，所以 intersectVal 必须为 0，而 skipA 和 skipB 可以是任意值。
+解释：这两个链表不相交，因此返回 null。
+</code></pre>
+<p><strong>注意：</strong></p>
+<ul>
+<li>如果两个链表没有交点，返回 <code>null</code>.</li>
+<li>在返回结果后，两个链表仍须保持原有的结构。</li>
+<li>可假定整个链表结构中没有循环。</li>
+<li>程序尽量满足 O(<em>n</em>) 时间复杂度，且仅用 O(<em>1</em>) 内存。</li>
+</ul>
+<blockquote>
+<p><strong>PS. 这题和字节的二面笔试题（给定每个结点的父节点，让你找两个结点的最低公共祖先）异曲同工</strong></p>
+</blockquote>
+<p>**思路：**先找到两个链表的长度lengthA 和 lengthB ，长度差值为c， 让长的链表从链表头开始走c步（到了与短链表头相同的位置），接着两个链表指针一起向后走，直到相交。如果不存在，那就是返回null</p>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        // 两个链表的长度
+        int lenA = 0;
+        int lenB = 0;
+        // 两个指针用来遍历链表，确定链表长度
+        ListNode curA = headA;
+        ListNode curB = headB;
+        // 两个链表一起遍历
+        while(curA!=null || curB!=null){
+            if(curA!=null) {
+                lenA++;
+                curA = curA.next;
+            }
+            if(curB!=null){
+                lenB++;
+                curB = curB.next;
+            }
+        }
+        // 两链表长度差值
+        int minus = (lenA&gt;lenB)?lenA-lenB:lenB-lenA;
+        // 沿着长链表跑，直到跑到和短链表相同起跑线
+        if(lenA&gt;lenB){
+            while(minus--&gt;0){
+                headA = headA.next;
+            }
+        }else{
+            while(minus--&gt;0){
+                headB = headB.next;
+            }
+        }
+        // 找公共结点
+        while(headA!=null &amp;&amp; headB!=null){
+            if(headA==headB) return headA;
+            headA = headA.next;
+            headB = headB.next;
+        }
+        return null;
+    }
+}
+</code></pre>
+<h2 id="718-复杂链表的复制-lc-138-剑指-35-neutral_face-star">7.18 复杂链表的复制 LC-138 剑指 35 😐 ⭐️</h2>
+<p><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/">138. 复制带随机指针的链表</a>   ✔️</p>
+<p>请实现 <code>copyRandomList</code> 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 <code>next</code> 指针指向下一个节点，还有一个 <code>random</code> 指针指向链表中的任意节点或者 <code>null</code>。</p>
+<p><strong>示例 1：</strong></p>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/01/09/e1.png" alt="img" style="zoom:67%;" />
+<pre><code>输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/01/09/e2.png" alt="img" style="zoom:67%;" />
+<pre><code>输入：head = [[1,1],[2,1]]
+输出：[[1,1],[2,1]]
+</code></pre>
+<p><strong>示例 3：</strong></p>
+<p><strong><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/01/09/e3.png" alt="img" style="zoom:67%;" /></strong></p>
+<pre><code>输入：head = [[3,null],[3,0],[3,null]]
+输出：[[3,null],[3,0],[3,null]]
+</code></pre>
+<p><strong>示例 4：</strong></p>
+<pre><code>输入：head = []
+输出：[]
+解释：给定的链表为空（空指针），因此返回 null。
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>-10000 &lt;= Node.val &lt;= 10000</code></li>
+<li><code>Node.random</code> 为空（null）或指向链表中的节点。</li>
+<li>节点数目不超过 1000 。</li>
+</ul>
+<p><strong>思路</strong></p>
+<hr>
+<p>第一步，在每个节点的后面插入复制的节点。</p>
+<img src="D:\编程学习\笔试\链表&amp;栈.assets\1.jpg" style="zoom:50%;" />
+<p>第二步，对复制节点的 random 链接进行赋值。</p>
+<img src="D:\编程学习\笔试\链表&amp;栈.assets\2.jpg" style="zoom:50%;" />
+<p>第三步，拆分。</p>
+<img src="D:\编程学习\笔试\链表&amp;栈.assets\3.jpg" style="zoom:50%;" />
+<hr>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+<pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+class Solution {
+    public Node copyRandomList(Node head) {
+        // 这一步别忘记，如果没有这步，在37行会报报空指针异常
+        if(head == null) return null;
+        
+        Node cur = head;
+        // 插入复制的新节点
+        // 在这一步不能更新random。因为此时为新节点更新的random是原先的节点，而不是复制出来的新结点
+        while(cur!=null){
+            Node newNode = new Node(cur.val);
+            newNode.next = cur.next;
+            cur.next = newNode;
+            cur = newNode.next;
+        }
+
+        // 建立random 链接
+        cur = head;
+        while(cur!=null){
+            Node copy = cur.next;
+            // 如果没有对cur.random判断，执行下面语句会出现空指针异常
+            if(cur.random!=null){
+                copy.random = cur.random.next;
+            }
+            cur = copy.next;
+        }
+        
+        cur = head;
+        // 复制链表的头节点
+        Node newHead = head.next;
+        while(cur!=null &amp;&amp; cur.next!=null){
+            Node tmp = cur.next;
+            // 防止tmp为空导致tmp.next发生空指针异常，在外面的while循环里确保cur.next!=null
+            cur.next = tmp.next;
+            cur = tmp;
+            //cur = tmp.next;
+            //tmp.next = cur.next;
+        }
+        // 返回复制链表的头结点
+        return newHead;
+    }
+}
+</code></pre>
+<h2 id="719-二叉搜索树与双向链表-lc-426-剑指36-neutral_face-star">7.19 二叉搜索树与双向链表 LC-426 剑指36 😐 ⭐️</h2>
+<p>输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新节点，只能调整树中节点指针的指向。  ✔️</p>
+<p>为了让您更好地理解问题，以下面的二叉搜索树为例：</p>
+<img src="https://assets.leetcode.com/uploads/2018/10/12/bstdlloriginalbst.png" alt="img" style="zoom: 50%;" />
+<p>我们希望将这个二叉搜索树转化为双向循环链表。链表中的每个节点都有一个前驱和后继指针。对于双向循环链表，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。</p>
+<p>下图展示了上面的二叉搜索树转化成的链表。“head” 表示指向链表中有最小元素的节点。</p>
+<img src="https://assets.leetcode.com/uploads/2018/10/12/bstdllreturndll.png" alt="img" style="zoom:50%;" />
+<p>特别地，我们希望可以就地完成转换操作。当转化完成以后，树中节点的左指针需要指向前驱，树中节点的右指针需要指向后继。还需要返回链表中的第一个节点的指针。</p>
+<p><strong>思路</strong></p>
+<p>中序遍历 + 两个指向头结点head和前驱结点的指针pre</p>
+<p><a href="https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/solution/mian-shi-ti-36-er-cha-sou-suo-shu-yu-shuang-xian-5/">参考链接</a></p>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span> ： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span> 为二叉树的节点数，中序遍历需要访问所有节点。 <font color=red>不知道为什么牛客上这题超时?</font><br>
+<strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>： 最差情况下，即树退化为链表时，递归深度达到 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>，系统使用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span> 栈空间。</p>
+<pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val,Node _left,Node _right) {
+        val = _val;
+        left = _left;
+        right = _right;
+    }
+};
+*/
+class Solution {
+    // 将head和pre定义为类变量
+    Node head, pre;
+    public Node treeToDoublyList(Node root) {
+        // 这句话不能漏掉
+        if(root==null) return null;
+        // 中序遍历主体
+        inOrder(root);
+        // 全部递归完成后，pre指向双向链表中的尾节点
+        pre.right = head;
+        head.left =pre;//进行头节点和尾节点的相互指向，这两句的顺序也是可以颠倒的
+        return head;
+    }
+
+    // 递归中序遍历，递归的过程中直接修改类变量head和pre，无需返回值
+    public void inOrder(Node cur){
+        if(cur==null) return;
+        
+        inOrder(cur.left);
+
+        // pre用于记录双向链表中位于cur左侧的节点，即上一次迭代中的cur
+        // 当pre==null时，cur左侧没有节点,即此时cur为双向链表中的头结点
+        if(pre==null) {
+            head = cur;
+        }
+        //反之，pre!=null时，cur左侧存在节点pre，需要进行pre.right=cur的操作。
+        else {
+            pre.right = cur;
+            cur.left = pre;
+        }
+		// 更新pre
+        // pre指向当前的cur
+        pre = cur;
+        inOrder(cur.right);//全部迭代完成后，pre指向双向链表中的尾节点
+    }
+}
+</code></pre>
+<h2 id="720-删除排序链表中的重复元素-lc-83-smile">7.20 删除排序链表中的重复元素 LC-83 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/">83. 删除排序链表中的重复元素</a>   ✔️</p>
+<p>给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: 1-&gt;1-&gt;2
+输出: 1-&gt;2
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: 1-&gt;1-&gt;2-&gt;3-&gt;3
+输出: 1-&gt;2-&gt;3
+</code></pre>
+<p><strong>方法：迭代</strong></p>
+<hr>
+<ul>
+<li><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></li>
+<li><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head==null) return null;
+        if(head.next==null) return head;
+        ListNode cur = head.next;
+        ListNode pre = head;
+        while(cur!=null){
+            // 删除重复结点
+            if(cur.val==pre.val){
+                ListNode tmp = cur.next;
+                pre.next = tmp;
+                // pre不需要更新,只更新cur
+                cur = tmp;    
+            }else{
+                // 结点不重复，先更新pre，再更新cur
+                pre = cur;
+                cur = cur.next;
+            }    
+        }
+        return head;
+    }
+}
+</code></pre>
+<h2 id="721-从尾到头打印链表-剑指06-smile">7.21 从尾到头打印链表 剑指06 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/">剑指 Offer 06. 从尾到头打印链表</a>   ✔️</p>
+<p>输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：head = [1,3,2]
+输出：[2,3,1]
+</code></pre>
+<p><strong>限制：</strong></p>
+<pre><code>0 &lt;= 链表长度 &lt;= 10000
+</code></pre>
+<p><strong>方法1：借助栈先入后出</strong></p>
+<hr>
+<ul>
+<li>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+</li>
+<li>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int[] reversePrint(ListNode head) {
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        while(head!=null){
+            stack.push(head.val);
+            head = head.next;
+        }
+        int len = stack.size();
+        int[] res = new int[len];
+        for(int i=0; i&lt;len; i++){
+            res[i] = stack.pop();
+        }
+        return res;
+    }
+}
+</code></pre>
+<p><strong>方法2：递归</strong></p>
+<hr>
+<ul>
+<li>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+</li>
+<li>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    List&lt;Integer&gt; tmp = new ArrayList&lt;Integer&gt;();
+    
+    public int[] reversePrint(ListNode head) {
+        recur(head);
+        int[] res = new int[tmp.size()];
+        for(int i = 0; i &lt; res.length; i++)
+            res[i] = tmp.get(i);
+        return res;
+    }
+
+    public void recur(ListNode head){
+        if (head == null) return;
+        recur(head.next);
+        tmp.add(head.val);
+    }
+}
+</code></pre>
+<h2 id="722-删除链表的结点-剑指18-smile">7.22 删除链表的结点 剑指18 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/shan-chu-lian-biao-de-jie-dian-lcof/">剑指 Offer 18. 删除链表的节点</a>   ✔️</p>
+<p>给定单向链表的头指针和一个要删除的节点的值，定义一个函数删除该节点。</p>
+<p>返回删除后的链表的头节点。</p>
+<p>**注意：**此题对比原题有改动</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: head = [4,5,1,9], val = 5
+输出: [4,1,9]
+解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 1 -&gt; 9.
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: head = [4,5,1,9], val = 1
+输出: [4,5,9]
+解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 5 -&gt; 9.
+</code></pre>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode deleteNode(ListNode head, int val) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        while(head!=null){
+            if(head.val==val){
+                pre.next = head.next;
+                head.next = null;
+                // 如果删除的是头结点，使用哑结点dummy就能体现好处了
+                return dummy.next;
+            }
+            // 不是要删除的结点，更新pre和head
+            pre = head;
+            head = head.next;
+        }
+        // 如果给定的val不存在于链表中，则删除失败，直接返回head
+        return head;
+    }
+}
+</code></pre>
+<h2 id="723-删除链表中的重复结点-nowcoder-剑指56-neutral_face-star">7.23 删除链表中的重复结点 NowCoder 剑指56 😐 ⭐️</h2>
+<p><strong>题目描述</strong>   ✔️</p>
+<p>在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。</p>
+<blockquote>
+<p>例如，链表1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5 处理后为 1-&gt;2-&gt;5</p>
+</blockquote>
+<p><font color=red>Tips：</font></p>
+<p>难度大于 <font color=blue>7.21</font> <img src="https://img.shields.io/badge/leetcode83-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy"> 和 <font color = blue>7.23</font>  <img src="https://img.shields.io/badge/%E5%89%91%E6%8C%87Offer-18-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy"></p>
+<p>因为 <img src="https://img.shields.io/badge/leetcode-83-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy"> 要求是保留重复元素的一个而不是本题要求的重复结点全删，而 <img src="https://img.shields.io/badge/%E5%89%91%E6%8C%87Offer-18-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy"> 就是一个另类的题。</p>
+<ul>
+<li>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+</li>
+<li>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></p>
+</li>
+</ul>
+<pre><code class="language-java">/*
+ public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+*/
+public class Solution {
+    public ListNode deleteDuplication(ListNode pHead){
+        ListNode dummy = new ListNode(-1);
+        ListNode pre = dummy;
+        dummy.next = pHead;
+        ListNode cur = pHead;
+        // flag标记是否出现重复结点
+        boolean flag = false;
+        while(cur!=null){
+            if(cur.next!=null &amp;&amp; cur.next.val==cur.val){
+                flag = true; 
+                cur = cur.next;
+            }else if(flag &amp;&amp; cur.next==null){
+                pre.next = null;
+                return dummy.next;
+            }else if(flag &amp;&amp; cur.next.val!=cur.val){
+                pre.next = cur.next;
+                // 这里不能更新pre，因为不能确保cur.next往后不出现重复
+                // pre及之前的结点都是不重复的结点
+                //pre = cur.next;
+                cur = cur.next;
+                flag = false;
+            }else{
+                pre = cur;
+                cur = cur.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<h2 id="724-链表中倒数第k个结点-剑指22-smile">7.24 链表中倒数第K个结点 剑指22 😄</h2>
+<p><a href="https://leetcode-cn.com/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/">剑指 Offer 22. 链表中倒数第k个节点</a>   ✔️ ​</p>
+<p>输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。</p>
+<p><strong>示例：</strong></p>
+<pre><code>给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 k = 2.
+
+返回链表 4-&gt;5.
+</code></pre>
+<p><font color=blue>联系 7.14</font>   <img src="https://img.shields.io/badge/leetcode19-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E5%80%92%E6%95%B0%E7%AC%ACN%E4%B8%AA%E7%BB%93%E7%82%B9-brightgreen.svg?style=plastic" alt="瘦小的圆角矩形" loading="lazy">  <font color=red>一样的思路，快慢指针，维护一个长度为K的区间</font></p>
+<ul>
+<li>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p>
+</li>
+<li>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></p>
+</li>
+</ul>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+
+// 思想和leetcode19相同
+class Solution {
+    public ListNode getKthFromEnd(ListNode head, int k) {
+        ListNode fast = head;
+        // 快指针先跑K步
+        while(k--&gt;0){
+            if(fast!=null){
+                fast = fast.next;
+            }
+            // 这一步是考虑到K可能大于链表长度。但估计出题者没有考虑这个情况
+            // 也就是fast已经为null了，而k还&gt;0
+            else{
+                return null;
+            }    
+        }
+        ListNode slow = head;
+        // 快慢指针同时跑
+        while(fast!=null){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
+</code></pre>
+<h1 id="8-栈">8 栈</h1>
+<h2 id="81-最小栈-lc-155">8.1 最小栈  LC-155</h2>
+<p><a href="https://leetcode-cn.com/problems/min-stack/">155. 最小栈</a></p>
+<p>设计一个支持 <code>push</code> ，<code>pop</code> ，<code>top</code> 操作，并能在常数时间内检索到最小元素的栈。</p>
+<ul>
+<li><code>push(x)</code> —— 将元素 x 推入栈中。</li>
+<li><code>pop()</code> —— 删除栈顶的元素。</li>
+<li><code>top()</code> —— 获取栈顶元素。</li>
+<li><code>getMin()</code> —— 检索栈中的最小元素。</li>
+</ul>
+<p><strong>示例:</strong></p>
+<pre><code>输入：
+[&quot;MinStack&quot;,&quot;push&quot;,&quot;push&quot;,&quot;push&quot;,&quot;getMin&quot;,&quot;pop&quot;,&quot;top&quot;,&quot;getMin&quot;]
+[[],[-2],[0],[-3],[],[],[],[]]
+
+输出：
+[null,null,null,null,-3,null,0,-2]
+
+解释：
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --&gt; 返回 -3.
+minStack.pop();
+minStack.top();      --&gt; 返回 0.
+minStack.getMin();   --&gt; 返回 -2.
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>pop</code>、<code>top</code> 和 <code>getMin</code> 操作总是在 <strong>非空栈</strong> 上调用。</li>
+</ul>
+<p><strong>思路</strong>    <strong>辅助栈</strong></p>
+<p>要做出这道题目，首先要理解栈结构先进后出的性质。</p>
+<p>对于栈来说，如果一个元素 <code>a</code> 在入栈时，栈里有其它的元素 <code>b, c, d</code>，那么无论这个栈在之后经历了什么操作，只要 <code>a</code> 在栈中，<code>b, c, d</code> 就一定在栈中，因为在 <code>a</code> 被弹出之前，<code>b, c, d</code> 不会被弹出。</p>
+<p>因此，在操作过程中的任意一个时刻，只要栈顶的元素是 <code>a</code>，那么我们就可以确定栈里面现在的元素一定是 a, b, c, d。</p>
+<p>那么，我们可以在每个元素 <code>a</code> 入栈时把当前栈的最小值 <code>m</code> 存储起来。在这之后无论何时，如果栈顶元素是 <code>a</code>，我们就可以直接返回存储的最小值 <code>m</code>。</p>
+<p><strong>算法</strong></p>
+<p>按照上面的思路，我们只需要设计一个数据结构，<strong>使得每个元素 <code>a</code> 与其相应的最小值 <code>m</code> 时刻保持一一对应</strong>。因此我们可以<strong>使用一个辅助栈，与元素栈同步插入与删除</strong>，用于存储与每个元素对应的最小值。</p>
+<ul>
+<li>
+<p>当一个元素要入栈时，我们取当前辅助栈的栈顶存储的最小值，与当前元素比较得出最小值，将这个最小值插入辅助栈中；</p>
+</li>
+<li>
+<p>当一个元素要出栈时，我们把辅助栈的栈顶元素也一并弹出；</p>
+</li>
+<li>
+<p>在任意一个时刻，栈内元素的最小值就存储在辅助栈的栈顶元素中。</p>
+</li>
+</ul>
+<p><strong>时间复杂度</strong>：对于题目中的所有操作，时间复杂度均为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。因为栈的插入、删除与读取操作都是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>，我们定义的每个操作最多调用栈操作两次。</p>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>，其中 n 为总操作数。最坏情况下，我们会连续插入 n 个元素，此时两个栈占用的空间为 O(n)。</p>
+<pre><code class="language-java">class MinStack {
+
+    private Stack&lt;Integer&gt; stack;
+    // 辅助栈，每个位置的数字代表stack处于相应位置时所有数字中的最小数字
+    // 比如stack中存放的是6-&gt;2-&gt;5-&gt;8(栈顶)，那么helper中就是6-&gt;2-&gt;2-&gt;2
+    // 比如helper中从栈顶向下第二个位置是2，stack中是5，表示当stack中是6-&gt;2-&gt;5时，最小数字是2
+    private Stack&lt;Integer&gt; helper;
+
+    /** initialize your data structure here. */
+    public MinStack() {
+        stack = new Stack&lt;&gt;();
+        helper = new Stack&lt;&gt;();
+    }
+    
+    public void push(int x) {
+        if(stack.isEmpty() || x &lt; helper.peek()){    
+            helper.push(x);
+        }else {
+            helper.push(helper.peek());
+        }
+        stack.push(x);
+    }
+    
+    public void pop() {
+        stack.pop();
+        helper.pop();
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int getMin() {
+        return helper.peek();
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+</code></pre>
+<h2 id="82-柱状图中最大的矩形">8.2 柱状图中最大的矩形</h2>
+<p><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/">84. 柱状图中最大的矩形</a></p>
+<p>给定 <em>n</em> 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。</p>
+<p>求在该柱状图中，能够勾勒出来的矩形的最大面积。</p>
+<figure data-type="image" tabindex="3"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/histogram.png" alt="img" loading="lazy"></figure>
+<p>以上是柱状图的示例，其中每个柱子的宽度为 1，给定的高度为 <code>[2,1,5,6,2,3]</code>。</p>
+<figure data-type="image" tabindex="4"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/histogram_area.png" alt="img" loading="lazy"></figure>
+<p>图中阴影部分为所能勾勒出的最大矩形面积，其面积为 <code>10</code> 个单位。</p>
+<p><strong>示例:</strong></p>
+<pre><code>输入: [2,1,5,6,2,3]
+输出: 10
+</code></pre>
+<p><strong>方法1：暴力解法</strong></p>
+<hr>
+<p><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">O(N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span><sup>2</sup><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>)</mo></mrow><annotation encoding="application/x-tex">)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mclose">)</span></span></span></span></p>
+<p><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></p>
+<pre><code class="language-java">class Solution {
+    public int largestRectangleArea(int[] heights) {
+        if(heights.length==0) return 0;
+        int maxArea = heights[0];
+        for(int i=0; i&lt;heights.length; i++){
+            // 初始化当前轮次最小高度
+            int minHeight = heights[i];
+            for(int j=i; j&lt;heights.length; j++){
+                // 更新最小高度
+                if(heights[j]&lt;minHeight) {
+                    minHeight = heights[j];
+                }
+                int curArea = minHeight*(j-i+1);
+                maxArea = Math.max(maxArea,curArea);        
+            }
+        }
+        return maxArea;
+    }
+}
+</code></pre>
+<p><strong>方法2：单调栈</strong></p>
+<hr>
+<p><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/solution/bao-li-jie-fa-zhan-by-liweiwei1419/">参考链接</a></p>
+<h2 id="83-栈的压入-弹出序列-leetcode-946medium剑指offer-31">8.3 栈的压入、弹出序列 Leetcode-946（Medium）剑指Offer-31</h2>
+<p><a href="https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/">面试题31. 栈的压入、弹出序列</a></p>
+<p>输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如，序列 {1,2,3,4,5} 是某栈的压栈序列，序列 {4,5,3,2,1} 是该压栈序列对应的一个弹出序列，但 {4,3,5,1,2} 就不可能是该压栈序列的弹出序列。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：pushed = [1,2,3,4,5], popped = [4,5,3,2,1]
+输出：true
+解释：我们可以按以下顺序执行：
+push(1), push(2), push(3), push(4), pop() -&gt; 4,
+push(5), pop() -&gt; 5, pop() -&gt; 3, pop() -&gt; 2, pop() -&gt; 1
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：pushed = [1,2,3,4,5], popped = [4,3,5,1,2]
+输出：false
+解释：1 不能在 2 之前弹出。 
+</code></pre>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>0 &lt;= pushed.length == popped.length &lt;= 1000</code></li>
+<li><code>0 &lt;= pushed[i], popped[i] &lt; 1000</code></li>
+<li><code>pushed</code> 是 <code>popped</code> 的排列。</li>
+</ol>
+<p><strong>思路</strong>（<a href="https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/solution/mian-shi-ti-31-zhan-de-ya-ru-dan-chu-xu-lie-mo-n-2/">参考链接</a>）</p>
+<hr>
+<p>考虑借用一个辅助栈 <code>stack</code> ，模拟 压入 / 弹出操作的排列。根据是否模拟成功，即可得到结果。</p>
+<ul>
+<li><strong>入栈操作</strong>： 按照压栈序列的顺序执行。</li>
+<li><strong>出栈操作</strong>： 每次入栈后，循环判断 “栈顶元素 == 弹出序列的当前元素” 是否成立，将符合弹出序列顺序的栈顶元素全部弹出。</li>
+</ul>
+<blockquote>
+<p>由于题目规定 栈的所有数字均不相等 ，因此在循环入栈中，每个元素出栈的位置的可能性是唯一的（若有重复数字，则具有多个可出栈的位置）。因而，在遇到 “栈顶元素 == 弹出序列的当前元素” 就应立即执行出栈。</p>
+</blockquote>
+<p><strong>算法流程</strong>：</p>
+<ol>
+<li><strong>初始化</strong>： 辅助栈 stack ，弹出序列的索引 i ；</li>
+<li><strong>遍历压栈序列</strong>： 各元素记为 num ；
+<ol>
+<li>元素 numnum 入栈；</li>
+<li>循环出栈：若 stackstack 的栈顶元素 == 弹出序列元素 popped[i]popped[i] ，则执行出栈与 i++i++ ；</li>
+</ol>
+</li>
+<li><strong>返回值</strong>： 若 stackstack 为空，则此弹出序列合法。</li>
+</ol>
+<p><strong>复杂度分析</strong>：</p>
+<p>时间复杂度： O(N），其中 N 为列表 pushed 的长度；每个元素最多入栈与出栈一次，即最多共 2N 次出入栈操作。<br>
+空间复杂度： O(N) ，辅助栈 stack 最多同时存储 N 个元素。</p>
+<pre><code class="language-java">class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        int i = 0;
+        for(int num : pushed) {
+            stack.push(num); // num 入栈
+            while(!stack.isEmpty() &amp;&amp; stack.peek() == popped[i]) { // 循环判断与出栈
+                stack.pop();
+                i++;
+            }
+        }
+        return stack.isEmpty();
+    }
+}
+</code></pre>
+<h1 id="9-队列">9 队列</h1>
+<h2 id="91-队列的最大值-剑指-59-ii-neutral_face">9.1 队列的最大值 剑指 59-II 😐</h2>
+<p>请定义一个队列并实现函数 <code>max_value</code> 得到队列里的最大值，要求函数<code>max_value</code>、<code>push_back</code> 和 <code>pop_front</code> 的<strong>均摊</strong>时间复杂度都是O(1)。</p>
+<p>若队列为空，<code>pop_front</code> 和 <code>max_value</code> 需要返回 -1</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入: 
+[&quot;MaxQueue&quot;,&quot;push_back&quot;,&quot;push_back&quot;,&quot;max_value&quot;,&quot;pop_front&quot;,&quot;max_value&quot;]
+[[],[1],[2],[],[],[]]
+输出: [null,null,null,2,1,2]
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入: 
+[&quot;MaxQueue&quot;,&quot;pop_front&quot;,&quot;max_value&quot;]
+[[],[],[]]
+输出: [null,-1,-1]
+</code></pre>
+<p><strong>限制：</strong></p>
+<ul>
+<li><code>1 &lt;= push_back,pop_front,max_value的总操作数 &lt;= 10000</code></li>
+<li><code>1 &lt;= value &lt;= 10^5</code></li>
+</ul>
+<p><strong>方法二：维护一个单调的双端队列</strong></p>
+<hr>
+<p><strong>思路</strong></p>
+<p>本算法基于问题的一个重要性质：当一个元素进入队列的时候，它前面所有比它小的元素就不会再对答案产生影响。</p>
+<p>举个例子，如果我们向队列中插入数字序列 <code>1 1 1 1 2</code>，那么在第一个数字 2 被插入后，数字 2 前面的所有数字 1 将不会对结果产生影响。因为按照队列的取出顺序，数字 2 只能在所有的数字 1 被取出之后才能被取出，因此如果数字 1 如果在队列中，那么数字 2 必然也在队列中，使得数字 1 对结果没有影响。</p>
+<p>按照上面的思路，我们可以设计这样的方法：从队列尾部插入元素时，我们可以提前取出队列中所有比这个元素小的元素，使得队列中只保留对结果有影响的数字。这样的方法等价于要求维持队列单调递减，即要保证每个元素的前面都没有比它小的元素。</p>
+<p>那么如何高效实现一个始终递减的队列呢？我们只需要在插入每一个元素 <code>value</code> 时，从队列尾部依次取出比当前元素 <code>value</code> 小的元素，直到遇到一个比当前元素大的元素 <code>value</code> 即可。</p>
+<ul>
+<li>上面的过程保证了只要在元素 <code>value</code> 被插入之前队列递减，那么在 <code>value</code> 被插入之后队列依然递减。</li>
+<li>而队列的初始状态（空队列）符合单调递减的定义。</li>
+<li>由数学归纳法可知队列将会始终保持单调递减。</li>
+</ul>
+<p>上面的过程需要从队列尾部取出元素，因此需要使用双端队列来实现。另外我们也需要一个辅助队列来记录所有被插入的值，以确定 <code>pop_front</code> 函数的返回值。</p>
+<p>保证了队列单调递减后，求最大值时只需要直接取双端队列中的第一项即可。</p>
+<img src="D:\编程学习\笔试\链表&amp;栈.assets\3.gif" style="zoom:50%;" />
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li><strong>时间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>（插入，删除，求最大值）
+<ul>
+<li>删除操作于求最大值操作显然只需要 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> 的时间。</li>
+<li>而插入操作虽然看起来有循环，做一个插入操作时最多可能会有 n 次出队操作。但要注意，由于每个数字只会出队一次，因此对于所有的 n 个数字的插入过程，对应的所有出队操作也不会大于 n 次。因此<font color=blue>将出队的时间均摊到每个插入操作上，时间复杂度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></font>。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>，需要用队列存储所有插入的元素。</li>
+</ul>
+<pre><code class="language-java">class MaxQueue {
+
+    Queue&lt;Integer&gt; queue;
+    LinkedList&lt;Integer&gt; maxQueue; //LinkedList是双端链表
+    public MaxQueue() {
+        queue = new LinkedList&lt;&gt;();
+        maxQueue = new LinkedList&lt;&gt;();
+    }
+    
+    public int max_value() {
+        return maxQueue.size()&gt;0?maxQueue.getFirst():-1;
+    }
+    
+    public void push_back(int value) {
+        queue.offer(value);
+        //注意：这里第二个判断条件不能带等号，即max中对于当前queue中的具有相同值的元素会全部存储，而不是存储最近的那个。
+        while(maxQueue.size()&gt;0 &amp;&amp; maxQueue.getLast() &lt; value){
+            maxQueue.removeLast();
+        }
+        maxQueue.offerLast(value);
+    }
+    
+    public int pop_front() {
+        //Integer类型的值的比较不能直接使用==
+        if(maxQueue.size()&gt;0 &amp;&amp; maxQueue.getFirst().equals(queue.peek())){
+            maxQueue.removeFirst();
+        }
+        return queue.size()&gt;0?queue.poll():-1;
+    }
+}
+
+/**
+ * Your MaxQueue object will be instantiated and called as such:
+ * MaxQueue obj = new MaxQueue();
+ * int param_1 = obj.max_value();
+ * obj.push_back(value);
+ * int param_3 = obj.pop_front();
+ */
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://seabiscuityj.github.io/post/er-cha-shu-and-di-gui/">
+                  <h3 class="post-title">
+                    二叉树 &amp; 递归
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+
+              
+                <div id="disqus_thread" data-aos="fade-in"></div>
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+
+  
+    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+    <script>
+
+    var options = {
+      shortname: '',
+      apikey: '',
+    }
+    if ('') {
+      options.api = ''
+    }
+    var dsqjs = new DisqusJS(options)
+
+    </script>
+  
+
+
+
+
+  </body>
+</html>
