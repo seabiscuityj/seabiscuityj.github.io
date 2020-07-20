@@ -1,13 +1,26 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" >
+
 <title>二叉树 &amp; 递归 | 我思故我在</title>
-<link rel="shortcut icon" href="https://seabiscuityj.github.io/favicon.ico?v=1595214117707">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://seabiscuityj.github.io/favicon.ico?v=1595216463888">
 <link rel="stylesheet" href="https://seabiscuityj.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="二叉树 &amp; 递归 | 我思故我在 - Atom Feed" href="https://seabiscuityj.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 
@@ -18,88 +31,91 @@
 字符串表达式仅包含非负整数，+， - ，*，/ 四种运算符和空格 。 整数除法仅保留整数部分。
 ..." />
     <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://seabiscuityj.github.io">
-  <img class="avatar" src="https://seabiscuityj.github.io/images/avatar.png?v=1595214117707" alt="">
-  </a>
-  <h1 class="site-title">
-    我思故我在
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://seabiscuityj.github.io">
+        <img src="https://seabiscuityj.github.io/images/avatar.png?v=1595216463888" class="site-logo">
+        <h1 class="site-title">我思故我在</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="/" class="menu">
-          首页
-        </a>
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
       
-        <a href="/archives" class="menu">
-          归档
-        </a>
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
       
-    
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
       
-        <a href="/tags" class="menu">
-          标签
-        </a>
+        
+          <a href="https://seabiscuityj.github.io/post/lian-biao-and-zhan" class="site-nav">
+            数据结构与算法
+          </a>
+        
       
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-      
-        <a href="https://seabiscuityj.github.io" class="menu">
-          数据结构与算法
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-    
+        
+          <a class="social-link" href="https://github.com/seabiscuityj" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://seabiscuityj.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
   </div>
 </div>
 
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              二叉树 &amp; 递归
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-07-20
-              </span>
-              <span>
-                73 min read
-              </span>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">二叉树 &amp; 递归</h2>
+            <div class="post-date">2020-07-20</div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p>8  递归</p>
+            <div class="post-content" v-pre>
+              <p>8  递归</p>
 <h2 id="81-基本计算器-ii-lc-227-neutral_face">8.1 基本计算器 II  LC-227 😐</h2>
 <p><a href="https://leetcode-cn.com/problems/basic-calculator-ii/">227. 基本计算器 II</a></p>
 <p>实现一个基本的计算器来计算一个简单的字符串表达式的值。</p>
@@ -2441,136 +2457,76 @@ class Solution {
  
 </code></pre>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#81-%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%99%A8-ii-lc-227-neutral_face">8.1 基本计算器 II  LC-227 :neutral_face:</a></li>
-</ul>
-</li>
-<li><a href="#9-%E6%A0%91">9 树</a>
-<ul>
-<li><a href="#%E6%A0%91%E6%98%AF%E9%80%92%E5%BD%92%E7%BB%93%E6%9E%84%E5%BE%88%E5%A4%9A%E6%A0%91%E9%97%AE%E9%A2%98%E9%83%BD%E5%8F%AF%E7%94%A8%E9%80%92%E5%BD%92%E8%A7%A3%E5%86%B3"><strong>树是递归结构，很多树问题都可用递归解决。</strong></a></li>
-<li><a href="#91-%E5%8F%A6%E4%B8%80%E4%B8%AA%E6%A0%91%E7%9A%84%E5%AD%90%E6%A0%91-lc-572-smile-star">9.1 另一个树的子树  LC-572 :smile: :star:</a></li>
-<li><a href="#92-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6-lc-104-%E5%89%91%E6%8C%87-55-i-smile">9.2 二叉树的最大深度  LC-104 剑指 55-I :smile:</a></li>
-<li><a href="#93-%E9%AA%8C%E8%AF%81%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91-lc-110-%E5%89%91%E6%8C%87-55-ii-smile-star">9.3 验证平衡二叉树  LC-110 剑指 55-II :smile: :star:</a></li>
-<li><a href="#94-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%B0%8F%E6%B7%B1%E5%BA%A6-lc-111-smile-star">9.4 二叉树的最小深度  LC-111 :smile: :star:</a></li>
-<li><a href="#95-%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91-lc-226-%E5%89%91%E6%8C%8727-smile">9.5 翻转二叉树  LC-226 ​剑指​2​7​ :smile:</a></li>
-<li><a href="#96-%E7%9B%B8%E5%90%8C%E7%9A%84%E6%A0%91-lc-100-smile">9.6 相同的树  LC-100 :smile: ​</a></li>
-<li><a href="#97-%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91-lc-101-%E5%89%91%E6%8C%8728-smile-star">9.7 对称二叉树  LC-101 剑指28 :smile: :star:</a></li>
-<li><a href="#98-%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E7%BB%93%E7%82%B9%E4%B8%AA%E6%95%B0-lc-222-neutral_face-%E4%BA%8C%E5%88%86%E4%BC%98%E5%8C%96">9.8 完全二叉树结点个数  LC-222 :neutral_face: （🤔二分优化）</a></li>
-<li><a href="#99-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C-lc-112-smile">9.9 二叉树路径总和  LC-112 :smile:</a></li>
-<li><a href="#910-%E5%B7%A6%E5%8F%B6%E5%AD%90%E4%B9%8B%E5%92%8C-lc-404-smile">9.10 左叶子之和  LC-404 :smile:</a></li>
-<li><a href="#911-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88-lc-236-%E9%9D%A2%E8%AF%95%E9%87%91%E5%85%B8-68-ii-neutral_face-star">9.11 二叉树的最近公共祖先  LC-236 面试金典 68-II :neutral_face: :star:</a></li>
-<li><a href="#912-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88-%E5%AD%97%E8%8A%82%E9%9D%A2%E8%AF%95-neutral_face-star">9.12 二叉树的最近公共祖先 字节面试 :neutral_face: :star:</a></li>
-<li><a href="#913-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88-lc-235-%E9%9D%A2%E8%AF%95%E9%87%91%E5%85%B8-68-i-smile-star">9.13 二叉搜索树的最近公共祖先 LC-235 面试金典 68-I :smile: :star:</a></li>
-<li><a href="#914-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91-lc-105-%E5%89%91%E6%8C%8707-neutral_face-star">9.14 重建二叉树  LC-105 ​剑指​0​7​ :neutral_face: :star:</a></li>
-<li><a href="#915-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84-%E5%89%91%E6%8C%8726-neutral_face-starstar">9.15 树的子结构  剑指26​ ​ :neutral_face: :star::star:</a></li>
-<li><a href="#916-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E5%A4%A7%E7%BB%93%E7%82%B9-%E5%89%91%E6%8C%8754-smile-star">9.16 二叉搜索树的第k大结点  剑指54 :smile: :star:</a></li>
-<li><a href="#917-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91-%E5%89%91%E6%8C%87-32-i-neutral_face">9.17 从上到下打印二叉树  剑指 32-I :neutral_face:</a></li>
-<li><a href="#918-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%A4%9A%E8%A1%8C%E6%89%93%E5%8D%B0-lc-102-%E5%89%91%E6%8C%87-32-ii-neutral_face">9.18 二叉树多行打印 LC-102 剑指 32-II :neutral_face:</a></li>
-<li><a href="#919-%E4%B9%8B%E5%AD%97%E5%BD%A2%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91-%E5%89%91%E6%8C%87-32-iii-neutral_face-star">9.19 之字形打印二叉树  剑指 32-III :neutral_face: :star:</a></li>
-<li><a href="#920-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-lc-98-neutral_face">9.20 验证二叉搜索树 LC-98 :neutral_face:</a></li>
-<li><a href="#921-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86-%E5%89%91%E6%8C%87-33-perseverestar">9.21 二叉搜索树的后序遍历  剑指 33 :persevere::star:</a></li>
-<li><a href="#922-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE-lc-199-neutral_face-starperseveredfs">9.22 二叉树的右视图 LC-199 :neutral_face:  :star:（:persevere:DFS）</a></li>
-<li><a href="#923-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%89%80%E6%9C%89%E8%B7%AF%E5%BE%84-lc-257-smile-star">9.23 二叉树的所有路径 LC-257 :smile: :star:</a></li>
-<li><a href="#924-%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-lc-96-neutral_face">9.24 不同的二叉搜索树 LC-96 :neutral_face:</a></li>
-<li><a href="#925-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%92%8C%E4%B8%BA%E6%9F%90%E4%B8%80%E5%80%BC%E7%9A%84%E8%B7%AF%E5%BE%84-%E5%89%91%E6%8C%8734-lc-113-neutral_face-starstar">9.25 二叉树中和为某一值的路径 剑指34 LC-113 :neutral_face: :star::star:</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
             </div>
-          </article>
-        </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://seabiscuityj.github.io/post/hello-gridea/">
+                  <h3 class="post-title">
+                    Hello Gridea
+                  </h3>
+                </a>
+              </div>
+            
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://seabiscuityj.github.io/post/hello-gridea/">
-              <h3 class="post-title">
-                Hello Gridea
-              </h3>
-            </a>
+            
+              
+
+              
+                <div id="disqus_thread" data-aos="fade-in"></div>
+              
+            
+
           </div>
-        
 
-        
-          
-
-          
-            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
-<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
-
-<div id="disqus_thread"></div>
-
-<script>
-
-var options = {
-  shortname: '',
-  apikey: '',
-}
-if ('') {
-  options.api = ''
-}
-var dsqjs = new DisqusJS(options)
-
-</script>
-
-          
-        
-
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://seabiscuityj.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
+        </div>
       </div>
     </div>
 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+
+  
+    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
-
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+    var options = {
+      shortname: '',
+      apikey: '',
+    }
+    if ('') {
+      options.api = ''
+    }
+    var dsqjs = new DisqusJS(options)
 
     </script>
+  
+
+
+
+
   </body>
 </html>
