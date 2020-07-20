@@ -1,26 +1,13 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>链表 &amp; 栈 | 我思故我在</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://seabiscuityj.github.io/favicon.ico?v=1595213618056">
+<link rel="shortcut icon" href="https://seabiscuityj.github.io/favicon.ico?v=1595214052087">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://seabiscuityj.github.io/styles/main.css">
-
-
-  
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css" />
-  
-
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link rel="alternate" type="application/atom+xml" title="链表 &amp; 栈 | 我思故我在 - Atom Feed" href="https://seabiscuityj.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
@@ -29,85 +16,88 @@
 287. 寻找重复数
 给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数..." />
     <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-
-      <div class="sidebar" :class="{ 'full-height': menuVisible }">
-  <div class="top-container" data-aos="fade-right">
-    <div class="top-header-container">
-      <a class="site-title-container" href="https://seabiscuityj.github.io">
-        <img src="https://seabiscuityj.github.io/images/avatar.png?v=1595213618056" class="site-logo">
-        <h1 class="site-title">我思故我在</h1>
-      </a>
-      <div class="menu-btn" @click="menuVisible = !menuVisible">
-        <div class="line"></div>
-      </div>
-    </div>
-    <div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://seabiscuityj.github.io">
+  <img class="avatar" src="https://seabiscuityj.github.io/images/avatar.png?v=1595214052087" alt="">
+  </a>
+  <h1 class="site-title">
+    我思故我在
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
       
-        
-          <a href="/" class="site-nav">
-            首页
-          </a>
-        
+        <a href="/" class="menu">
+          首页
+        </a>
       
-        
-          <a href="/archives" class="site-nav">
-            归档
-          </a>
-        
+    
       
-        
-          <a href="/tags" class="site-nav">
-            标签
-          </a>
-        
+        <a href="/archives" class="menu">
+          归档
+        </a>
       
-        
-          <a href="/post/about" class="site-nav">
-            关于
-          </a>
-        
+    
       
-    </div>
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://seabiscuityj.github.io" class="menu">
+          数据结构与算法
+        </a>
+      
+    
   </div>
-  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
-    <div class="social-container">
+  <div class="social-container">
+    
       
-        
-          <a class="social-link" href="https://github.com/seabiscuityj" target="_blank">
-            <i class="fab fa-github"></i>
-          </a>
-        
+    
       
-        
+    
       
-        
+    
       
-        
+    
       
-        
-      
-    </div>
-    <div class="site-description">
-      温故而知新
-    </div>
-    <div class="site-footer">
-      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://seabiscuityj.github.io/atom.xml" target="_blank">RSS</a>
-    </div>
+    
   </div>
 </div>
 
-
-      <div class="main-container">
-        <div class="content-container" data-aos="fade-up">
-          <div class="post-detail">
-            <h2 class="post-title">链表 &amp; 栈</h2>
-            <div class="post-date">2020-07-20</div>
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              链表 &amp; 栈
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-07-20
+              </span>
+              <span>
+                76 min read
+              </span>
+              
+            </div>
             
-            <div class="post-content" v-pre>
-              <h1 id="7-链表存在环快慢指针">7 链表存在环（快慢指针）</h1>
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="7-链表存在环快慢指针">7 链表存在环（快慢指针）</h1>
 <h2 id="71-寻找重复数-leetcode-287medium">7.1 寻找重复数  Leetcode-287（Medium）</h2>
 <p><a href="https://leetcode-cn.com/problems/find-the-duplicate-number/">287. 寻找重复数</a></p>
 <p>给定一个包含 <em>n</em> + 1 个整数的数组 <em>nums</em>，其数字都在 1 到 <em>n</em> 之间（包括 1 和 <em>n</em>），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。</p>
@@ -2452,76 +2442,145 @@ push(5), pop() -&gt; 5, pop() -&gt; 3, pop() -&gt; 2, pop() -&gt; 1
  */
 </code></pre>
 
-            </div>
-            
-            
-              <div class="next-post">
-                <div class="next">下一篇</div>
-                <a href="https://seabiscuityj.github.io/post/er-cha-shu-and-di-gui/">
-                  <h3 class="post-title">
-                    二叉树 &amp; 递归
-                  </h3>
-                </a>
               </div>
-            
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#7-%E9%93%BE%E8%A1%A8%E5%AD%98%E5%9C%A8%E7%8E%AF%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88">7 链表存在环（快慢指针）</a>
+<ul>
+<li><a href="#71-%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0-leetcode-287medium">7.1 寻找重复数  Leetcode-287（Medium）</a></li>
+<li><a href="#72-%E5%BF%AB%E4%B9%90%E6%95%B0-leetcode-202">7.2 快乐数  Leetcode-202</a></li>
+<li><a href="#73-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8i-lc-141-smile">7.3 环形链表I  LC-141 :smile:</a></li>
+<li><a href="#74-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8ii-lc-142-neutral_face">7.4 环形链表II  LC-142 :neutral_face:</a></li>
+</ul>
+</li>
+<li><a href="#%E9%93%BE%E8%A1%A8-%E5%85%B6%E4%BD%99">链表-其余</a>
+<ul>
+<li><a href="#75-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8-lc-21-smile-star">7.5 合并两个有序链表  LC-21 :smile: :star:</a></li>
+<li><a href="#76-%E5%90%88%E5%B9%B6k%E4%B8%AA%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8-lc-23-persevere-star">7.6 合并K个排序链表  LC-23 :persevere: :star:</a></li>
+<li><a href="#77-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8-lc-206-%E5%89%91%E6%8C%87-24-smile">7.7 反转链表  LC-206 ​剑指​ 2​4​ :smile:</a></li>
+<li><a href="#78-k%E4%B8%AA%E4%B8%80%E7%BB%84%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8-lc-25-persevere-star">7.8 K个一组反转链表  LC-25 :persevere: :star:</a></li>
+<li><a href="#79-%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8-lc-148-persevere-star">7.9 排序链表 LC-148 :persevere: :star:</a></li>
+<li><a href="#710-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0-lc-2-neutral_face-star">7.10 两数相加  LC-2 :neutral_face: :star:</a></li>
+<li><a href="#711-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0ii-lc-445-neutral_face-star">7.11 两数相加II LC-445 :neutral_face: :star:</a></li>
+<li><a href="#712-%E9%93%BE%E8%A1%A8%E7%9A%84%E4%B8%AD%E9%97%B4%E8%8A%82%E7%82%B9-lc-876-smile">7.12 链表的中间节点  LC-876 :smile:</a></li>
+<li><a href="#713-%E7%A7%BB%E9%99%A4%E9%93%BE%E8%A1%A8%E5%85%83%E7%B4%A0-lc-203-smile">7.13 移除链表元素  LC-203 :smile:</a></li>
+<li><a href="#714-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%ACn%E4%B8%AA%E7%BB%93%E7%82%B9-lc-19-neutral_face">7.14 删除链表的倒数第N个结点 LC-19 :neutral_face:</a></li>
+<li><a href="#715-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E7%BB%93%E7%82%B9-lc-237-smile">7.15 删除链表中的结点  LC-237 :smile:</a></li>
+<li><a href="#716-lru%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6-lc-146-persevere-star">7.16 LRU缓存机制  LC-146 :persevere: :star:</a></li>
+<li><a href="#717-%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9-lc-160-%E5%89%91%E6%8C%87-52-smile">7.17 两个链表的第一个公共结点  LC-160 剑指 52 :smile:</a></li>
+<li><a href="#718-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6-lc-138-%E5%89%91%E6%8C%87-35-neutral_face-star">7.18 复杂链表的复制 LC-138 剑指 35 :neutral_face: :star:</a></li>
+<li><a href="#719-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8-lc-426-%E5%89%91%E6%8C%8736-neutral_face-star">7.19 二叉搜索树与双向链表 LC-426 剑指36 :neutral_face: :star:</a></li>
+<li><a href="#720-%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0-lc-83-smile">7.20 删除排序链表中的重复元素 LC-83 :smile:</a></li>
+<li><a href="#721-%E4%BB%8E%E5%B0%BE%E5%88%B0%E5%A4%B4%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8-%E5%89%91%E6%8C%8706-smile">7.21 从尾到头打印链表 剑指06 :smile:</a></li>
+<li><a href="#722-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E7%BB%93%E7%82%B9-%E5%89%91%E6%8C%8718-smile">7.22 删除链表的结点 剑指18 :smile:</a></li>
+<li><a href="#723-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E7%BB%93%E7%82%B9-nowcoder-%E5%89%91%E6%8C%8756-neutral_face-star">7.23 删除链表中的重复结点 NowCoder 剑指56 :neutral_face: :star:</a></li>
+<li><a href="#724-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9-%E5%89%91%E6%8C%8722-smile">7.24 链表中倒数第K个结点 剑指22 :smile:</a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%A0%88">8 栈</a>
+<ul>
+<li><a href="#81-%E6%9C%80%E5%B0%8F%E6%A0%88-lc-155">8.1 最小栈  LC-155</a></li>
+<li><a href="#82-%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2">8.2 柱状图中最大的矩形</a></li>
+<li><a href="#83-%E6%A0%88%E7%9A%84%E5%8E%8B%E5%85%A5-%E5%BC%B9%E5%87%BA%E5%BA%8F%E5%88%97-leetcode-946medium%E5%89%91%E6%8C%87offer-31">8.3 栈的压入、弹出序列 Leetcode-946（Medium）剑指Offer-31</a></li>
+</ul>
+</li>
+<li><a href="#9-%E9%98%9F%E5%88%97">9 队列</a>
+<ul>
+<li><a href="#91-%E9%98%9F%E5%88%97%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC-%E5%89%91%E6%8C%87-59-ii-neutral_face">9.1 队列的最大值 剑指 59-II :neutral_face:</a></li>
+</ul>
+</li>
+</ul>
 
-            
-              
-
-              
-                <div id="disqus_thread" data-aos="fade-in"></div>
-              
-            
-
-          </div>
-
+              </div>
+            </div>
+          </article>
         </div>
-      </div>
-    </div>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script type="application/javascript">
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://seabiscuityj.github.io/post/er-cha-shu-and-di-gui/">
+              <h3 class="post-title">
+                二叉树 &amp; 递归
+              </h3>
+            </a>
+          </div>
+        
 
-AOS.init();
+        
+          
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+          
+            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var options = {
+  shortname: '',
+  apikey: '',
+}
+if ('') {
+  options.api = ''
+}
+var dsqjs = new DisqusJS(options)
 
 </script>
 
+          
+        
 
-  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>
-    hljs.initHighlightingOnLoad()
-  </script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://seabiscuityj.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
 
+      </div>
+    </div>
 
-
-
-  
-
-  
-    <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
     <script>
+      hljs.initHighlightingOnLoad()
 
-    var options = {
-      shortname: '',
-      apikey: '',
-    }
-    if ('') {
-      options.api = ''
-    }
-    var dsqjs = new DisqusJS(options)
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-
-
-
   </body>
 </html>
